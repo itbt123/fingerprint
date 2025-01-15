@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -59,6 +60,7 @@
     }
   </style>
 </head>
+
 <body>
   <div class="container mt-5 main-header">
     <h1 class="text-center">Fingerprint Check-In/Out</h1>
@@ -91,15 +93,17 @@
             <option value="Check-Out">Check-Out</option>
           </select>
         </div>
-        
+
         <button id="scanFingerprint" class="btn btn-primary mb-3">ចាប់ផ្តើមស្កេន</button>
 
         <!-- Action Information -->
         <div class="action-info">
           <p><span class="label">ប្រភេទស្កេន៖</span> <span id="action" class="value">N/A</span></p>
           <p><span class="label">ថ្ងៃខែឆ្នាំ/ម៉ោង៖</span> <span id="timestamp" class="value">N/A</span></p>
-          <p><span class="label">ការចាប់ទីតាំងរបស់អ្នក៖</span> <span id="location" class="value">Fetching location...</span></p>
-          <p><span class="label">ទីតាំងរបស់អ្នក៖</span> <a id="mapLink" class="map-link" href="#" target="_blank">View on Map</a></p>
+          <p><span class="label">ការចាប់ទីតាំងរបស់អ្នក៖</span> <span id="location" class="value">Fetching
+              location...</span></p>
+          <p><span class="label">ទីតាំងរបស់អ្នក៖</span> <a id="mapLink" class="map-link" href="#" target="_blank">View
+              on Map</a></p>
         </div>
         <!-- Status Message -->
         <p id="status" class="status-message text-muted">រងចាំការស្កេនរបស់អ្នក...</p>
@@ -107,14 +111,19 @@
     </div>
   </div>
   <script>
-    // Store check-in/out state
     const userState = {};
 
-    // Allowed location bounds
-const allowedLatitude = 11.55089;
-    const allowedLongitude = 104.91219;
-    const tolerance = 0.01;
 
+
+    // Allowed location bounds
+
+
+    const allowedLocations = [
+
+      { latitude: 11.562739, longitude: 104.918138, tolerance: 0.01 },
+      { latitude: 11.55794, longitude: 104.88718, tolerance: 0.01 },
+      { latitude: 11.556739, longitude: 104.928138, tolerance: 0.01 },
+    ];
     // Get user's location
     const locationElement = document.getElementById('location');
     const mapLinkElement = document.getElementById('mapLink');
@@ -161,7 +170,7 @@ const allowedLatitude = 11.55089;
       mapLinkElement.href = "#";
       scanButton.style.display = 'none'; // Hide the button if geolocation is not supported
     }
-    
+
     document.getElementById("scanFingerprint").addEventListener("click", function (e) {
       e.preventDefault(); // Prevent the default form submission
       document.getElementById("status").textContent = "កំពុងបញ្ជូន";
@@ -174,7 +183,7 @@ const allowedLatitude = 11.55089;
       var timestamp = new Date().toLocaleString();
       var location = `Lat: ${currentLatitude.toFixed(5)}, Long: ${currentLongitude.toFixed(5)}`;
 
-      var formData = new FormData();  
+      var formData = new FormData();
       formData.append('ឈ្មោះ', userName);
       formData.append('ប្រភេទស្កេន', action);
       formData.append('ថ្ងៃ/ម៉ោង', timestamp);
@@ -182,53 +191,53 @@ const allowedLatitude = 11.55089;
 
       var keyValuePairs = [];
       for (var pair of formData.entries()) {
-      keyValuePairs.push(pair[0] + "=" + pair[1]);
+        keyValuePairs.push(pair[0] + "=" + pair[1]);
       }
 
       var formDataString = keyValuePairs.join("&");
 
       // Send a POST request to your Google Apps Script
       fetch(
-      "https://script.google.com/macros/s/AKfycbyS-hk5UE2BJsDcZ9eshieZOcncGDTJWrnYN3cMmFj5hlFFnoBKnm1e5nX3p0A_V1xFKQ/exec",
-      
-      {
-        redirect: "follow",
-        method: "POST",
-        body: formDataString,
-        headers: {
-        "Content-Type": "text/plain;charset=utf-8",
-        },
-      }
-      )
-      .then(function (response) {
-        // Check if the request was successful
-        if (response) {
-        return response; // Assuming your script returns JSON response
-        } else {
-        throw new Error("Failed to submit the form.");
-        }
-      })
-      .then(function (data) {
-        // Display a success message
-        document.getElementById("status").textContent =
-        "បានបញ្ជូនរួចរាល់";
-        document.getElementById("status").style.display = "block";
-        document.getElementById("status").style.backgroundColor = "gold";
-        document.getElementById("status").style.color = "beige";
-        document.getElementById("scanFingerprint").disabled = false;
+        "https://script.google.com/macros/s/AKfycbyS-hk5UE2BJsDcZ9eshieZOcncGDTJWrnYN3cMmFj5hlFFnoBKnm1e5nX3p0A_V1xFKQ/exec",
 
-        setTimeout(function () {
-        document.getElementById("status").textContent = "";
-        document.getElementById("status").style.display = "none";
-        }, 2600);
-      })
-      .catch(function (error) {
-        // Handle errors, you can display an error message here
-        console.error(error);
-        document.getElementById("status").textContent =
-        "An error occurred while submitting the form.";
-        document.getElementById("status").style.display = "block";
-      });
+        {
+          redirect: "follow",
+          method: "POST",
+          body: formDataString,
+          headers: {
+            "Content-Type": "text/plain;charset=utf-8",
+          },
+        }
+      )
+        .then(function (response) {
+          // Check if the request was successful
+          if (response) {
+            return response; // Assuming your script returns JSON response
+          } else {
+            throw new Error("Failed to submit the form.");
+          }
+        })
+        .then(function (data) {
+          // Display a success message
+          document.getElementById("status").textContent =
+            "បានបញ្ជូនរួចរាល់";
+          document.getElementById("status").style.display = "block";
+          document.getElementById("status").style.backgroundColor = "gold";
+          document.getElementById("status").style.color = "beige";
+          document.getElementById("scanFingerprint").disabled = false;
+
+          setTimeout(function () {
+            document.getElementById("status").textContent = "";
+            document.getElementById("status").style.display = "none";
+          }, 2600);
+        })
+        .catch(function (error) {
+          // Handle errors, you can display an error message here
+          console.error(error);
+          document.getElementById("status").textContent =
+            "An error occurred while submitting the form.";
+          document.getElementById("status").style.display = "block";
+        });
     });
     // Function to send a message to the Telegram bot
     function sendToTelegram(message) {
@@ -245,13 +254,13 @@ const allowedLatitude = 11.55089;
         },
         body: JSON.stringify(data)
       })
-      .then(response => response.json())
-      .then(data => {
-        console.log("Message sent to Telegram:", data);
-      })
-      .catch(error => {
-        console.error("Error sending message to Telegram:", error);
-      });
+        .then(response => response.json())
+        .then(data => {
+          console.log("Message sent to Telegram:", data);
+        })
+        .catch(error => {
+          console.error("Error sending message to Telegram:", error);
+        });
     }
 
     document.getElementById('scanFingerprint').addEventListener('click', () => {
@@ -300,7 +309,7 @@ const allowedLatitude = 11.55089;
         // Send message to Telegram bot with full map link
         const mapLink = `https://www.google.com/maps?q=${currentLatitude},${currentLongitude}`;
         sendToTelegram(`ឈ្មោះ ៖ ${userName}\n**Checked out**\n\nថ្ងៃខែឆ្នាំ/ម៉ោង ៖ ${currentTimeFormatted}\n[មើលទីតាំង] ${mapLink}`);
-            } else {
+      } else {
         userState[userName] = "Check-In";
         statusElement.textContent = `សូមស្វាគមន៍, ${userName}!`;
         actionElement.textContent = "Check-In";
@@ -308,7 +317,7 @@ const allowedLatitude = 11.55089;
         // Send message to Telegram bot with full map link
         const mapLink = `https://www.google.com/maps?q=${currentLatitude},${currentLongitude}`;
         sendToTelegram(`ឈ្មោះ ៖ ${userName}\n**Checked in**\n\nថ្ងៃខែឆ្នាំ/ម៉ោង​ ៖ ${currentTimeFormatted}\n[មើលទីតាំង] ${mapLink}`);
-            }
+      }
 
       timestampElement.textContent = currentTimeFormatted;
 
@@ -328,4 +337,5 @@ const allowedLatitude = 11.55089;
     });
   </script>
 </body>
+
 </html>
