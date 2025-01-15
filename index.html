@@ -272,13 +272,13 @@
       localStorage.setItem("buttonStateTime", Date.now());
 
       // Check if user is within the allowed location bounds
-      if (!isWithinBounds) {
-        alert("អ្នកមិនអាចស្កេនបានទេ! សូមមកកន្លែងធ្វើការរបស់អ្នកសិន! ប្រញាប់ឡើង!");
-        scanButton.disabled = false; // Re-enable the button in case of location error
-        scanButton.style.display = 'block'; // Show the button again
-        localStorage.removeItem("buttonStateTime"); // Reset localStorage
-        return;
-      }
+      // if (!isWithinBounds) {
+      //   alert("អ្នកមិនអាចស្កេនបានទេ! សូមមកកន្លែងធ្វើការរបស់អ្នកសិន! ប្រញាប់ឡើង!");
+      //   scanButton.disabled = false; // Re-enable the button in case of location error
+      //   scanButton.style.display = 'block'; // Show the button again
+      //   localStorage.removeItem("buttonStateTime"); // Reset localStorage
+      //   return;
+      // }
 
       const action = document.getElementById('actionSelect').value; // Get selected action (Check-In or Check-Out)
 
