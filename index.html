@@ -58,6 +58,10 @@
       color: #212529;
       font-size: 12px;
     }
+
+    .hidden {
+      display: none;
+    }
   </style>
 </head>
 
@@ -65,7 +69,7 @@
   <div class="container mt-5 main-header">
     <h1 class="text-center">Fingerprint Check-In/Out</h1>
     <div class="card mt-4">
-      <div class="card-body">
+      <div class="card-body"></div>
         <h5 class="card-title fs-6"><mark>*សូមស្កេនទិន្នន័យឱ្យបានត្រឹមត្រូវទាន់ពេលវេលា។ សូមអរគុណ ។</mark></h5>
 
         <!-- User Name Input -->
@@ -97,13 +101,12 @@
         <button id="scanFingerprint" class="btn btn-primary mb-3">ចាប់ផ្តើមស្កេន</button>
 
         <!-- Action Information -->
-        <div class="action-info">
+        <div id="actionInfo" class="action-info hidden">
           <p><span class="label">ប្រភេទស្កេន៖</span> <span id="action" class="value">N/A</span></p>
           <p><span class="label">ថ្ងៃខែឆ្នាំ/ម៉ោង៖</span> <span id="timestamp" class="value">N/A</span></p>
           <p><span class="label">ការចាប់ទីតាំងរបស់អ្នក៖</span> <span id="location" class="value">Fetching
               location...</span></p>
-          <p><span class="label">ទីតាំងរបស់អ្នក៖</span> <a id="mapLink" class="map-link" href="#" target="_blank">View
-              on Map</a></p>
+          <p><span class="label">ទីតាំងរបស់អ្នក៖</span> <a id="mapLink" class="map-link" href="#" target="_blank">View on Map</a></p>
         </div>
         <!-- Status Message -->
         <p id="status" class="status-message text-muted">រងចាំការស្កេនរបស់អ្នក...</p>
@@ -122,6 +125,7 @@
     const locationElement = document.getElementById('location');
     const mapLinkElement = document.getElementById('mapLink');
     const scanButton = document.getElementById('scanFingerprint');
+    const actionInfoElement = document.getElementById('actionInfo');
 
     let isWithinBounds = false;
     let currentLatitude = 0;
@@ -170,6 +174,9 @@
       document.getElementById("status").textContent = "កំពុងបញ្ជូន";
       document.getElementById("status").style.display = "block";
       document.getElementById("scanFingerprint").disabled = true;
+
+      // Show the action info
+      actionInfoElement.classList.remove('hidden');
 
       // Collect the form data
       var userName = document.getElementById('userNameInput').value.trim();
