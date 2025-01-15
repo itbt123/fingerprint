@@ -113,10 +113,7 @@
   <script>
     const userState = {};
 
-
-
     // Allowed location bounds
-
     const allowedLatitude = 11.562791;
     const allowedLongitude = 104.918105;
     const tolerance = 0.01;
@@ -236,6 +233,7 @@
           document.getElementById("status").style.display = "block";
         });
     });
+
     // Function to send a message to the Telegram bot
     function sendToTelegram(message) {
       const url = `https://api.telegram.org/bot7205851039:AAHBOJmY40GvNl7M0X_FN9Ml0Fg2T_KQpb8/sendMessage`;
@@ -267,15 +265,6 @@
 
       // Store the time when the button is clicked in localStorage
       localStorage.setItem("buttonStateTime", Date.now());
-
-      // Check if user is within the allowed location bounds
-      // if (!isWithinBounds) {
-      //   alert("អ្នកមិនអាចស្កេនបានទេ! សូមមកកន្លែងធ្វើការរបស់អ្នកសិន! ប្រញាប់ឡើង!");
-      //   scanButton.disabled = false; // Re-enable the button in case of location error
-      //   scanButton.style.display = 'block'; // Show the button again
-      //   localStorage.removeItem("buttonStateTime"); // Reset localStorage
-      //   return;
-      // }
 
       const action = document.getElementById('actionSelect').value; // Get selected action (Check-In or Check-Out)
 
@@ -327,12 +316,25 @@
         location: { latitude: currentLatitude, longitude: currentLongitude }
       });
       localStorage.setItem("userData", JSON.stringify(userData));
+
       // Reload the page after 1 minute to hide the button
       setTimeout(() => {
-        window.location.reload(false); // Reloads the page without using the cache
-
         window.location.href = window.location.href;
       }, 60000); // 1 minute = 60000 milliseconds
+    });
+
+    // Check the button state on page load
+    window.addEventListener('load', () => {
+      const buttonStateTime = localStorage.getItem("buttonStateTime");
+      if (buttonStateTime) {
+        const elapsedTime = Date.now() - buttonStateTime;
+        if (elapsedTime < 60000) { // 1 minute = 60000 milliseconds
+          document.getElementById('scanFingerprint').disabled = true;
+          document.getElementById('scanFingerprint').style.display = 'none';
+        } else {
+          localStorage.removeItem("buttonStateTime");
+        }
+      }
     });
   </script>
 </body>
