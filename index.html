@@ -327,9 +327,11 @@
         location: { latitude: currentLatitude, longitude: currentLongitude }
       });
       localStorage.setItem("userData", JSON.stringify(userData));
-      // Reload the page after 1 minute to hide the button
+      // Re-enable the button after 1 minute without reloading the page
       setTimeout(() => {
-        window.location.href = window.location.href;
+        scanButton.disabled = false;
+        scanButton.style.display = 'block';
+        localStorage.removeItem("buttonStateTime"); // Reset localStorage
       }, 60000); // 1 minute = 60000 milliseconds
     });
   </script>
