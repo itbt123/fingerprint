@@ -8,11 +8,11 @@
   <style>
     /* Custom styles */
     .card-body {
-      background-color: #f8f9fa;
+      background-color: #e9ecef;
     }
 
     .action-info p {
-      font-size: 1.1rem;
+      font-size: 1.2rem;
     }
 
     .action-info .label {
@@ -20,7 +20,7 @@
     }
 
     .action-info .value {
-      color: #007bff;
+      color: #28a745;
     }
 
     .map-link {
@@ -28,24 +28,33 @@
     }
 
     .status-message {
-      font-size: 1.2rem;
+      font-size: 1.3rem;
       font-weight: bold;
+      color: #dc3545;
     }
 
     .modal-dialog {
-      max-width: 400px;
+      max-width: 450px;
     }
 
     .btn {
       width: 100%;
+      background-color: #007bff;
+      color: white;
     }
 
     .btn:disabled {
-      opacity: 0.5;
+      opacity: 0.6;
     }
 
     .main-header {
-      font-family: Krasar;
+      font-family: 'Arial', sans-serif;
+      color: #343a40;
+    }
+
+    .card-title mark {
+      background-color: #ffc107;
+      color: #212529;
     }
   </style>
 </head>
@@ -58,8 +67,18 @@
 
         <!-- User Name Input -->
         <div class="mb-3 mt-4">
-          <label for="userNameInput" class="form-label">បញ្ជូលឈ្មោះអ្នកឱ្យបានត្រឹមត្រូវ</label>
-          <input type="text" id="userNameInput" class="form-control" placeholder="Enter your name" required>
+          <label for="userNameInput" class="form-label">ជ្រើសរើសអ្នកប្រើប្រាស់</label>
+          <select id="userNameInput" class="form-select" required>
+            <option value="" disabled selected>ជ្រើសរើសឈ្មោះរបស់អ្នក!</option>
+            <option value="សៅ សម្បត្តិ">សៅ សម្បត្តិ</option>
+            <option value="ឌឹម សុជាតិ">ឌឹម សុជាតិ</option>
+            <option value="សៀង សារុណ">សៀង សារុណ</option>
+            <option value="ឆន រត្តនៈ">ឆន រត្តនៈ</option>
+            <option value="ម៉ុល នីតា">ម៉ុល នីតា</option>
+            <option value="សឹម សុខ">សឹម សុខ</option>
+            <option value="ផូ សុខនី">សឹម សុខ</option>
+            <!-- Add more options as needed -->
+          </select>
         </div>
 
         <!-- Action Selection Dropdown -->
