@@ -97,6 +97,7 @@
     // Get user's location
     const locationElement = document.getElementById('location');
     const mapLinkElement = document.getElementById('mapLink');
+    const scanButton = document.getElementById('scanFingerprint');
 
     let isWithinBounds = false;
     let currentLatitude = 0;
@@ -120,18 +121,23 @@
           if (!isWithinBounds) {
             locationElement.textContent += " (ទីតាំងនេះមិនត្រឹមត្រូវទេ!)";
             mapLinkElement.textContent = "មិនអាចស្កេនទីតាំងបានទេ!";
+            scanButton.style.display = 'none'; // Hide the button if location is incorrect
+          } else {
+            scanButton.style.display = 'block'; // Show the button if location is correct
           }
         },
         () => {
           locationElement.textContent = "មិនអាចយកទីតាំងនេះបានទេ!";
           mapLinkElement.textContent = "សូមចុចត្រង់នេះដើម្បីបើកទីតាំង";
           mapLinkElement.href = "#";
+          scanButton.style.display = 'none'; // Hide the button if location cannot be fetched
         }
       );
     } else {
       locationElement.textContent = "Geolocation is not supported by this browser.";
       mapLinkElement.textContent = "ផែនទីមិនមានទេ។";
       mapLinkElement.href = "#";
+      scanButton.style.display = 'none'; // Hide the button if geolocation is not supported
     }
     
     document.getElementById("scanFingerprint").addEventListener("click", function (e) {
