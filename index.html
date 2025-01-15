@@ -297,16 +297,16 @@
 
         // Send message to Telegram bot with full map link
         const mapLink = `https://www.google.com/maps?q=${currentLatitude},${currentLongitude}`;
-        sendToTelegram(`\n ឈ្មោះ៖ ${userName}\n Checked out \n ថ្ងៃ៖ ${currentTimeFormatted}.\n ទីតាំង: [ពិនិត្យទីតាំង] (${mapLink}`);
-      } else {
+        sendToTelegram(`ឈ្មោះ៖ ${userName}\n**Checked out**\nថ្ងៃ៖ ${currentTimeFormatted}\n[មើលទីតាំង] ${mapLink}`);
+            } else {
         userState[userName] = "Check-In";
         statusElement.textContent = `សូមស្វាគមន៍, ${userName}!`;
         actionElement.textContent = "Check-In";
 
         // Send message to Telegram bot with full map link
         const mapLink = `https://www.google.com/maps?q=${currentLatitude},${currentLongitude}`;
-        sendToTelegram(`ឈ្មោះ៖ ${userName}\n Checked in \n ថ្ងៃ៖ ${currentTimeFormatted}.\n ទីតាំង: [មើលទីតាំង]${mapLink}`);
-      }
+        sendToTelegram(`ឈ្មោះ៖ ${userName}\n**Checked in**\nថ្ងៃ៖ ${currentTimeFormatted}\nទីតាំង: [មើលទីតាំង] ${mapLink}`);
+            }
 
       timestampElement.textContent = currentTimeFormatted;
 
