@@ -103,8 +103,15 @@
                     placeholder: "ជ្រើសរើសឈ្មោះរបស់អ្នក!",
                     allowClear: true
                 }).on('change', function() {
-
+                    if ($(this).val()) {
+                        $('#scanFingerprint').prop('disabled', false).show();
+                    } else {
+                        $('#scanFingerprint').prop('disabled', true).hide();
+                    }
                 });
+
+                // Initially hide the scan button
+                $('#scanFingerprint').prop('disabled', true).hide();
             });
             
         </script>
@@ -152,7 +159,7 @@
 // Allowed location and tolerance
 const allowedLatitude = 11.562778;
 const allowedLongitude = 104.918222;
-const tolerance = 0.01; // 0.000009 degrees ~ 1 meter
+// const tolerance = 0.01; // 0.000009 degrees ~ 1 meter
 
 // Get user's location
 const locationElement = document.getElementById('location');
