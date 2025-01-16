@@ -98,8 +98,8 @@
         <!-- Include Select2 JS -->
         <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
         <script>
-                // Get the visit count and last visit timestamp from localStorage
-        let visitCount = localStorage.getItem('visitCount');
+// Get the visit count and last visit timestamp from localStorage
+let visitCount = localStorage.getItem('visitCount');
         let lastVisitTime = localStorage.getItem('lastVisitTime');
         const currentTime = new Date().getTime(); // Current time in milliseconds
 
@@ -111,7 +111,7 @@
 
         // Check if 1 minute has passed since the last visit
         const timeDifference = currentTime - lastVisitTime;
-        const oneMinute = 60 * 1000; // 1 minute in milliseconds
+        const oneMinute = 60 * 100; // 1 minute in milliseconds
 
         if (timeDifference > oneMinute) {
             // Reset visit count after 1 minute
@@ -131,12 +131,18 @@
             document.body.innerHTML = "<h1>អ្នកពិតជាខូចខ្លាំងណាស់ដែលហ៊ាន copy Link ស្កេនម្តងទៀត🤣</h1>";
             // Optionally, you can redirect or block further page interaction
         }
+
             $(document).ready(function() {
                 $('#userNameInput').select2({
                     placeholder: "ជ្រើសរើសឈ្មោះរបស់អ្នក!",
                     allowClear: true
                 }).on('change', function() {
-
+                    const userName = $(this).val();
+                    if (userName) {
+                        $('#scanFingerprint').prop('disabled', false);
+                    } else {
+                        $('#scanFingerprint').prop('disabled', true);
+                    }
                 });
             });
             
@@ -151,7 +157,7 @@
           </select>
         </div>
 
-        <button id="scanFingerprint" class="btn btn-primary mb-3">ចាប់ផ្តើមស្កេន</button>
+        <button id="scanFingerprint" class="btn btn-primary mb-3" disabled>ចាប់ផ្តើមស្កេន</button>
 
         <!-- Action Information -->
         <div class="action-info">
@@ -183,9 +189,9 @@
 
 
 // Allowed location and tolerance
-const allowedLatitude = 11.562778;
-const allowedLongitude = 104.918222;
-// const tolerance = 0.01; // 0.000009 degrees ~ 1 meter
+const allowedLatitude = 11.55089;
+const allowedLongitude = 104.91219;
+// const tolerance = 0.00011; // 0.000009 degrees ~ 1 meter
 
 // Get user's location
 const locationElement = document.getElementById('location');
@@ -405,6 +411,18 @@ if (navigator.geolocation) {
         }
       }
     });
+
+    // Disable the scan button if no name is selected
+    document.getElementById('userNameInput').addEventListener('change', function () {
+      const userName = this.value.trim();
+      if (userName) {
+        scanButton.disabled = false;
+      } else {
+        scanButton.disabled = true;
+      }
+    });
+
+    
   </script>
 </body>
 
