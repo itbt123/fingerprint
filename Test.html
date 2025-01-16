@@ -157,7 +157,7 @@
 // Allowed location and tolerance
 const allowedLatitude = 11.562751;
 const allowedLongitude = 104.918114;
-// const tolerance = 0.00011; // 0.000009 degrees ~ 1 meter
+const tolerance = 0.00011; // 0.000009 degrees ~ 1 meter
 
 // Get user's location
 const locationElement = document.getElementById('location');
@@ -175,8 +175,8 @@ if (navigator.geolocation) {
       currentLatitude = latitude;
       currentLongitude = longitude;
 
-      locationElement.textContent = `Lat: ${latitude.toFixed(5)}, Long: ${longitude.toFixed(5)}`;
-      mapLinkElement.href = `https://www.google.com/maps?q=${latitude},${longitude}`;
+      locationElement.textContent = Lat: ${latitude.toFixed(5)}, Long: ${longitude.toFixed(5)};
+      mapLinkElement.href = https://www.google.com/maps?q=${latitude},${longitude};
 
       // Check if user is within allowed location bounds
       isWithinBounds =
@@ -216,7 +216,7 @@ if (navigator.geolocation) {
       var userName = document.getElementById('userNameInput').value.trim();
       var action = document.getElementById('actionSelect').value;
       var timestamp = new Date().toLocaleString();
-      var location = `Lat: ${currentLatitude.toFixed(5)}, Long: ${currentLongitude.toFixed(5)}`;
+      var location = Lat: ${currentLatitude.toFixed(5)}, Long: ${currentLongitude.toFixed(5)};
 
       var formData = new FormData();
       formData.append('ឈ្មោះ', userName);
@@ -277,7 +277,7 @@ if (navigator.geolocation) {
 
     // Function to send a message to the Telegram bot
     function sendToTelegram(message) {
-      const url = `https://api.telegram.org/bot7205851039:AAHBOJmY40GvNl7M0X_FN9Ml0Fg2T_KQpb8/sendMessage`;
+      const url = https://api.telegram.org/bot7205851039:AAHBOJmY40GvNl7M0X_FN9Ml0Fg2T_KQpb8/sendMessage;
       const data = {
         chat_id: "-1002282814819", // Chat ID
         text: message
@@ -330,20 +330,20 @@ if (navigator.geolocation) {
       // Set action as per selected action (Check-In or Check-Out)
       if (action === "Check-Out") {
         userState[userName] = "Check-Out";
-        statusElement.textContent = `សំណាងល្អ, ${userName}!`;
+        statusElement.textContent = សំណាងល្អ, ${userName}!;
         actionElement.textContent = "Check-Out";
 
         // Send message to Telegram bot with full map link
-        const mapLink = `https://www.google.com/maps?q=${currentLatitude},${currentLongitude}`;
-        sendToTelegram(`ឈ្មោះ ៖ ${userName}\n**Checked out**\n\nថ្ងៃខែឆ្នាំ/ម៉ោង ៖ ${currentTimeFormatted}\n[មើលទីតាំង] ${mapLink}`);
+        const mapLink = https://www.google.com/maps?q=${currentLatitude},${currentLongitude};
+        sendToTelegram(ឈ្មោះ ៖ ${userName}\n**Checked out**\n\nថ្ងៃខែឆ្នាំ/ម៉ោង ៖ ${currentTimeFormatted}\n[មើលទីតាំង] ${mapLink});
       } else {
         userState[userName] = "Check-In";
-        statusElement.textContent = `សូមស្វាគមន៍, ${userName}!`;
+        statusElement.textContent = សូមស្វាគមន៍, ${userName}!;
         actionElement.textContent = "Check-In";
 
         // Send message to Telegram bot with full map link
-        const mapLink = `https://www.google.com/maps?q=${currentLatitude},${currentLongitude}`;
-        sendToTelegram(`ឈ្មោះ ៖ ${userName}\n**Checked in**\n\nថ្ងៃខែឆ្នាំ​ ៖ ${currentTimeFormatted}\n[មើលទីតាំង] ${mapLink}`);
+        const mapLink = https://www.google.com/maps?q=${currentLatitude},${currentLongitude};
+        sendToTelegram(ឈ្មោះ ៖ ${userName}\n**Checked in**\n\nថ្ងៃខែឆ្នាំ​ ៖ ${currentTimeFormatted}\n[មើលទីតាំង] ${mapLink});
       }
 
       timestampElement.textContent = currentTimeFormatted;
@@ -365,25 +365,27 @@ if (navigator.geolocation) {
     });
 
     // Check the button state on page load
-window.addEventListener('load', () => {
-  fetchLocation();
-
-  const buttonStateTime = localStorage.getItem("buttonStateTime");
-  if (buttonStateTime) {
-    const elapsedTime = Date.now() - buttonStateTime;
-    if (elapsedTime < 60000) { // 1 minute cooldown
-      scanButton.disabled = true;
-      scanButton.style.display = 'none';
-    } else {
-      localStorage.removeItem("buttonStateTime");
-      scanButton.disabled = false;
-      if (isWithinBounds) {
-        scanButton.style.display = 'block'; // Ensure button is visible if location is valid
-      } else {
-        scanButton.style.display = 'none';
+    window.addEventListener('load', () => {
+      const buttonStateTime = localStorage.getItem("buttonStateTime");
+      if (buttonStateTime) {
+        const elapsedTime = Date.now() - buttonStateTime;
+        if (elapsedTime < 60000) { // 1 minute = 60000 milliseconds
+          document.getElementById('scanFingerprint').disabled = true;
+          document.getElementById('scanFingerprint').style.display = 'none';
+        } else {
+          localStorage.removeItem("buttonStateTime");
+        }
       }
-    }
-  }
+    });
+
+    // Disable the scan button if no name is selected
+    document.getElementById('userNameInput').addEventListener('change', function () {
+      const userName = this.value.trim();
+      if (userName) {
+        scanButton.disabled = false;
+      } else {
+        scanButton.disabled = true;
+      }
     });
 
     
