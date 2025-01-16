@@ -100,8 +100,8 @@
         <script>
 $(document).ready(function() {
     const scanButton = $('#scanFingerprint');
-    const locationInput = $('#locationInput'); // Assuming there's an input or dropdown for location
-    const correctLocation = "Expected Location"; // Replace with the correct location value
+    const locationInput = $('#locationInput'); // Element for location selection
+    const correctLocation = "Expected Location"; // Replace with your correct location value
     const storageKey = "buttonStateTime";
     const timeoutDuration = 60000; // 1 minute in milliseconds
 
@@ -120,15 +120,15 @@ $(document).ready(function() {
     $('#userNameInput').select2({
         placeholder: "ជ្រើសរើសឈ្មោះរបស់អ្នក!",
         allowClear: true
-    }).on('change', updateButtonState);
+    }).on('change', updateButtonState); // Trigger check on name change
 
     // Add change listener for the location input
-    locationInput.on('change', updateButtonState);
+    locationInput.on('change', updateButtonState); // Trigger check on location change
 
     // Disable and hide button initially
     scanButton.prop('disabled', true).hide();
 
-    // Check button state based on stored timestamp
+    // Check button state based on stored timestamp (if applicable)
     const buttonStateTime = localStorage.getItem(storageKey);
     if (buttonStateTime) {
         const elapsedTime = Date.now() - buttonStateTime;
@@ -139,9 +139,13 @@ $(document).ready(function() {
         }
     }
 
-    // Example: Save the timestamp to localStorage when needed
-    // localStorage.setItem(storageKey, Date.now());
+    // Save timestamp to localStorage when the button is disabled
+    function disableButtonWithTimestamp() {
+        scanButton.prop('disabled', true).hide();
+        localStorage.setItem(storageKey, Date.now());
+    }
 });
+
 
 
             
@@ -190,7 +194,7 @@ $(document).ready(function() {
 // Allowed location and tolerance
 const allowedLatitude = 11.562751;
 const allowedLongitude = 104.918114;
-const tolerance = 0.00011; // 0.000009 degrees ~ 1 meter
+// const tolerance = 0.00011; // 0.000009 degrees ~ 1 meter
 
 // Get user's location
 const locationElement = document.getElementById('location');
