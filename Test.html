@@ -98,35 +98,19 @@
         <!-- Include Select2 JS -->
         <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
         <script>
-$(document).ready(function() {
-    const scanButton = $('#scanFingerprint');
-    
-    $('#userNameInput').select2({
-        placeholder: "ជ្រើសរើសឈ្មោះរបស់អ្នក!",
-        allowClear: true
-    }).on('change', function() {
-        const userName = $(this).val();
-        if (userName) {
-            scanButton.prop('disabled', false).show(); // Enable button
-        } else {
-            scanButton.prop('disabled', true).hide(); // Disable button
-        }
-    });
-
-    scanButton.prop('disabled', true).hide(); // Initially disable the button
-
-    // Check the button state on page load
-    const buttonStateTime = localStorage.getItem("buttonStateTime");
-    if (buttonStateTime) {
-        const elapsedTime = Date.now() - buttonStateTime;
-        if (elapsedTime < 60000) { // 1 minute = 60000 milliseconds
-            scanButton.prop('disabled', true).hide();
-        } else {
-            localStorage.removeItem("buttonStateTime");
-        }
-    }
-});
-
+            $(document).ready(function() {
+                $('#userNameInput').select2({
+                    placeholder: "ជ្រើសរើសឈ្មោះរបស់អ្នក!",
+                    allowClear: true
+                }).on('change', function() {
+                    const userName = $(this).val();
+                    if (userName) {
+                        $('#scanFingerprint').prop('disabled', false);
+                    } else {
+                        $('#scanFingerprint').prop('disabled', true);
+                    }
+                });
+            });
             
         </script>
         </div>
@@ -139,7 +123,7 @@ $(document).ready(function() {
           </select>
         </div>
 
-        <button id="scanFingerprint" class="btn btn-primary mb-3" disabled>ចាប់ផ្តើមស្កេន</button>
+        <button id="scanFingerprint" class="btn btn-primary mb-3">ចាប់ផ្តើមស្កេន</button>
 
         <!-- Action Information -->
         <div class="action-info">
@@ -171,8 +155,8 @@ $(document).ready(function() {
 
 
 // Allowed location and tolerance
-const allowedLatitude = 11.562751;
-const allowedLongitude = 104.918114;
+const allowedLatitude = 11.55089;
+const allowedLongitude = 104.91219;
 const tolerance = 0.01; // 0.000009 degrees ~ 1 meter
 
 // Get user's location
@@ -393,18 +377,6 @@ if (navigator.geolocation) {
         }
       }
     });
-
-    // Disable the scan button if no name is selected
-    document.getElementById('userNameInput').addEventListener('change', function () {
-      const userName = this.value.trim();
-      if (userName) {
-        scanButton.disabled = false;
-      } else {
-        scanButton.disabled = true;
-      }
-    });
-
-    
   </script>
 </body>
 
