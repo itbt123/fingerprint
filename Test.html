@@ -100,53 +100,32 @@
         <script>
 $(document).ready(function() {
     const scanButton = $('#scanFingerprint');
-    const locationInput = $('#locationInput'); // Element for location selection
-    const correctLocation = "Expected Location"; // Replace with your correct location value
-    const storageKey = "buttonStateTime";
-    const timeoutDuration = 60000; // 1 minute in milliseconds
-
-    // Function to check if the button should be enabled
-    function updateButtonState() {
-        const userName = $('#userNameInput').val();
-        const currentLocation = locationInput.val(); // Get the selected location
-        if (userName && currentLocation === correctLocation) {
-            scanButton.prop('disabled', false).show(); // Enable and show button
-        } else {
-            scanButton.prop('disabled', true).hide(); // Disable and hide button
-        }
-    }
-
-    // Initialize the select2 plugin for the name dropdown
+    
     $('#userNameInput').select2({
         placeholder: "ជ្រើសរើសឈ្មោះរបស់អ្នក!",
         allowClear: true
-    }).on('change', updateButtonState); // Trigger check on name change
+    }).on('change', function() {
+        const userName = $(this).val();
+        if (userName) {
+            scanButton.prop('disabled', false).show(); // Enable button
+        } else {
+            scanButton.prop('disabled', true).hide(); // Disable button
+        }
+    });
 
-    // Add change listener for the location input
-    locationInput.on('change', updateButtonState); // Trigger check on location change
+    scanButton.prop('disabled', true).hide(); // Initially disable the button
 
-    // Disable and hide button initially
-    scanButton.prop('disabled', true).hide();
-
-    // Check button state based on stored timestamp (if applicable)
-    const buttonStateTime = localStorage.getItem(storageKey);
+    // Check the button state on page load
+    const buttonStateTime = localStorage.getItem("buttonStateTime");
     if (buttonStateTime) {
         const elapsedTime = Date.now() - buttonStateTime;
-        if (elapsedTime < timeoutDuration) {
-            scanButton.prop('disabled', true).hide(); // Keep disabled
+        if (elapsedTime < 60000) { // 1 minute = 60000 milliseconds
+            scanButton.prop('disabled', true).hide();
         } else {
-            localStorage.removeItem(storageKey); // Clear expired data
+            localStorage.removeItem("buttonStateTime");
         }
     }
-
-    // Save timestamp to localStorage when the button is disabled
-    function disableButtonWithTimestamp() {
-        scanButton.prop('disabled', true).hide();
-        localStorage.setItem(storageKey, Date.now());
-    }
 });
-
-
 
             
         </script>
@@ -192,8 +171,8 @@ $(document).ready(function() {
 
 
 // Allowed location and tolerance
-const allowedLatitude = 11.562611;
-const allowedLongitude = 104.918111;
+const allowedLatitude = 11.562751;
+const allowedLongitude = 104.918114;
 const tolerance = 0.01; // 0.000009 degrees ~ 1 meter
 
 // Get user's location
