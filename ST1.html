@@ -1,6 +1,5 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -9,7 +8,10 @@
   <style>
     /* Custom styles */
     .card-body {
-      background-color: #e9ecef;
+      background-color: #f0f0f08e;
+      box-shadow: 0px 0px 1px 1px #6161618c;
+      border-radius: 8px;
+      border: 1px solid #080052;
     }
 
     .action-info p {
@@ -54,7 +56,7 @@
     }
 
     .card-title mark {
-      background-color: #ffc107;
+      /* background-color: #ffc107; */
       color: #212529;
       font-size: 12px;
     }
@@ -63,10 +65,10 @@
 
 <body>
   <div class="container mt-5 main-header">
-    <h1 class="text-center">Fingerprint Check-In/Out</h1>
+    <h1 class="text-center main-content" style="text-decoration: underline;">Fingerprint Check-In/Out</h1>
     <div class="card mt-4">
       <div class="card-body">
-        <h5 class="card-title fs-6"><mark>*សូមស្កេនទិន្នន័យឱ្យបានត្រឹមត្រូវទាន់ពេលវេលា។ សូមអរគុណ ។</mark></h5>
+        <h5 class="card-title fs-6 text-center"><mark>*សូមស្កេនទិន្នន័យឱ្យបានត្រឹមត្រូវទាន់ពេលវេលា។ សូមអរគុណ ។</mark></h5>
 
         <!-- User Name Input -->
         <div class="mb-3 mt-4">
@@ -87,14 +89,14 @@
 
         <!-- Action Selection Dropdown -->
         <div class="mb-3">
-          <label for="actionSelect" class="form-label">ជ្រើសរើសប្រភេទស្កេន</label>
-          <select id="actionSelect" class="form-select">
-            <option value="Check-In">Check-In</option>
-            <option value="Check-Out">Check-Out</option>
+          <label for="actionSelect" class="form-label">ជ្រើសរើសប្រភេទស្កេន </label>
+          <select id="actionSelect" class="form-select" required>
+            <option value="Check-In">ស្កេនចូល</option>
+            <option value="Check-Out">ស្កេនចេញ</option>
           </select>
         </div>
 
-        <button id="scanFingerprint" class="btn btn-primary mb-3">ចាប់ផ្តើមស្កេន</button>
+        <button id="scanFingerprint" class="btn btn-primary mb-3" disabled>ចាប់ផ្តើមស្កេន</button>
 
         <!-- Action Information -->
         <div class="action-info">
@@ -114,7 +116,7 @@
     const userState = {};
 
     // Allowed location bounds
-    const allowedLatitude = 11.590984;
+     const allowedLatitude = 11.590984;
     const allowedLongitude = 104.909721;
     const tolerance = 0.01;
 
@@ -302,7 +304,7 @@
 
         // Send message to Telegram bot with full map link
         const mapLink = `https://www.google.com/maps?q=${currentLatitude},${currentLongitude}`;
-        sendToTelegram(`ឈ្មោះ ៖ ${userName}\n**Checked in**\n\nថ្ងៃខែឆ្នាំ/ម៉ោង​ ៖ ${currentTimeFormatted}\n[មើលទីតាំង] ${mapLink}`);
+        sendToTelegram(`ឈ្មោះ ៖ ${userName}\n**Checked in**\n\nថ្ងៃខែឆ្នាំ​ ៖ ${currentTimeFormatted}\n[មើលទីតាំង] ${mapLink}`);
       }
 
       timestampElement.textContent = currentTimeFormatted;
@@ -334,6 +336,16 @@
         } else {
           localStorage.removeItem("buttonStateTime");
         }
+      }
+    });
+
+    // Disable the scan button if no name is selected
+    document.getElementById('userNameInput').addEventListener('change', function () {
+      const userName = this.value.trim();
+      if (userName) {
+        scanButton.disabled = false;
+      } else {
+        scanButton.disabled = true;
       }
     });
   </script>
