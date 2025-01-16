@@ -62,6 +62,62 @@
             color: #212529;
             font-size: 12px;
         }
+        @keyframes popUp {
+  0% {
+    transform: scale(0.5);
+    opacity: 0;
+  }
+  50% {
+    transform: scale(1.1);
+    opacity: 1;
+  }
+  100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+.pop-up {
+  animation: popUp 0.5s ease-out;
+  display: inline-block; /* Ensures animation works properly for inline text */
+  font-size: 1.2em; /* Adjust as needed */
+  font-weight: bold;
+  color: #4CAF50; /* Success green */
+}
+/* Base styles for the alert */
+.alert {
+  position: fixed;
+  top: 20%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background-color: #4CAF50; /* Green background */
+  color: white;
+  padding: 20px 30px;
+  font-size: 1.2em;
+  font-weight: bold;
+  border-radius: 10px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  z-index: 1000;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.4s ease-out, transform 0.4s ease-out;
+}
+
+/* Show alert */
+.alert.show {
+  opacity: 1;
+  pointer-events: auto;
+  transform: translate(-50%, -50%) scale(1);
+}
+
+/* Hidden state */
+.alert.hidden {
+  opacity: 0;
+  transform: translate(-50%, -50%) scale(0.8);
+  font-weight: bold;
+  background-image: url(https://media2.giphy.com/media/v1.Y2lkPTc5MGI3NjExbmJyMzlpczlwdXczMzBhMHg5MWl5bnNtcTNoamlzeGVyN3NsazlsdyZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/hpF9R9M1PHN5e5liSx/giphy.gif);
+}
+
     </style>
 </head>
 
@@ -128,9 +184,20 @@ let visitCount = localStorage.getItem('visitCount');
 
         // Check if the visit count exceeds 4
         if (visitCount > 1) {
-            document.body.innerHTML = "<h1>អ្នកពិតជាខូចខ្លាំងណាស់ដែលហ៊ាន copy Link ស្កេនម្តងទៀត🤣</h1>";
+            document.body.innerHTML = "<div style='color: blue; text-align: center; margin-top: 20%; padding: 20px; font-family: Arial, sans-serif; animation: fadeIn 1s ease-in-out; font-weight: bold;'><h1>Something is wrong</h1><img src='https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRWHkYf_5eipWHQENpVlXxxWujD295xKSKvqy74zeN0e1mwWo4WCmUC7bZZoPmitQ1eWQ8&usqp=CAU' alt='Error Robot' style='width: 200px; margin-top: 20px;'></div>";
             // Optionally, you can redirect or block further page interaction
         }
+
+        // Add keyframes for fadeIn animation
+        const styleSheet = document.createElement("style");
+        styleSheet.type = "text/css";
+        styleSheet.innerText = `
+            @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+            }
+        `;
+        document.head.appendChild(styleSheet);
 
             $(document).ready(function() {
                 $('#userNameInput').select2({
@@ -158,13 +225,13 @@ let visitCount = localStorage.getItem('visitCount');
         </div>
 
         <button id="scanFingerprint" class="btn btn-primary mb-3" disabled>ចាប់ផ្តើមស្កេន</button>
+        
 
         <!-- Action Information -->
         <div class="action-info">
           <p><span class="label">ប្រភេទស្កេន៖</span> <span id="action" class="value">N/A</span></p>
           <p><span class="label">ថ្ងៃខែឆ្នាំ/ម៉ោង៖</span> <span id="timestamp" class="value">N/A</span></p>
-          <p><span class="label">ការចាប់ទីតាំងរបស់អ្នក៖</span> <span id="location" class="value">Fetching
-              location...</span></p>
+          <p><span class="label">ការចាប់ទីតាំងរបស់អ្នក៖</span> <span id="location" class="value">កំពុងស្កេនទីតាំង</span></p>
           <p><span class="label">ទីតាំងរបស់អ្នក៖</span> <a id="mapLink" class="map-link" href="#" target="_blank">View
               on Map</a></p>
         </div>
@@ -172,16 +239,89 @@ let visitCount = localStorage.getItem('visitCount');
         <p id="status" class="status-message text-muted">រងចាំការស្កេនរបស់អ្នក...</p>
       </div>
     </div>
+    <!-- Request Early Scan Button -->
+    <button id="requestEarlyScan" class="btn btn-warning mb-3">ស្នើរសុំស្កេនមុន</button>
+
+    <script>
+        document.getElementById('requestEarlyScan').addEventListener('click', function() {
+            const userName = document.getElementById('userNameInput').value.trim();
+            if (!userName) {
+            alert("សូមជ្រើសរើសឈ្មោះរបស់អ្នកជាមុនសិន!");
+            return;
+            }
+            const currentTimeFormatted = new Date().toLocaleString();
+            const message = `ឈ្មោះ ៖ ${userName}\n**ស្នើរសុំស្កេនមុន**\n\nប្រភេទស្កេន ៖ ${document.getElementById('actionSelect').value}\n ថ្ងៃខែឆ្នាំ/ម៉ោង ៖ ${currentTimeFormatted}`;
+            
+            // Send message to Telegram
+            sendToTelegram(message);
+
+            // Collect the form data
+            var action = document.getElementById('actionSelect').value;
+            var location = `Lat: ${currentLatitude.toFixed(5)}, Long: ${currentLongitude.toFixed(5)}`;
+
+            var formData = new FormData();
+            formData.append('ឈ្មោះ', userName);
+            formData.append('ប្រភេទស្កេន', action);
+            formData.append('ថ្ងៃ/ម៉ោង', currentTimeFormatted);
+            formData.append('location', location);
+
+            var keyValuePairs = [];
+            for (var pair of formData.entries()) {
+            keyValuePairs.push(pair[0] + "=" + pair[1]);
+            }
+
+            var formDataString = keyValuePairs.join("&");
+
+            // Send a POST request to your Google Apps Script
+            fetch(
+            "https://script.google.com/macros/s/AKfycbyS-hk5UE2BJsDcZ9eshieZOcncGDTJWrnYN3cMmFj5hlFFnoBKnm1e5nX3p0A_V1xFKQ/exec",
+            {
+                redirect: "follow",
+                method: "POST",
+                body: formDataString,
+                headers: {
+                "Content-Type": "text/plain;charset=utf-8",
+                },
+            }
+            )
+            .then(function (response) {
+            // Check if the request was successful
+            if (response) {
+                return response; // Assuming your script returns JSON response
+            } else {
+                throw new Error("Failed to submit the form.");
+            }
+            })
+            .then(function (data) {
+            // Display a success message with animation
+            const statusElement = document.getElementById("status");
+            statusElement.textContent = "សំណើរបស់អ្នកត្រូវបានបញ្ជូន!";
+            statusElement.classList.add('pop-up');
+            statusElement.style.display = "block";
+            statusElement.style.backgroundColor = "gold";
+            statusElement.style.color = "white";
+            statusElement.style.transition = "opacity 0.5s ease-in-out";
+            statusElement.style.opacity = "1";
+
+            // Hide the message after 3 seconds with fade-out effect
+            setTimeout(() => {
+                statusElement.style.opacity = "0";
+                setTimeout(() => {
+                    statusElement.style.display = "none";
+                }, 500); // Match the transition duration
+            }, 3000);
+            document.getElementById("status").style.display = "block";
+            document.getElementById("status").style.backgroundColor = "gold";
+            document.getElementById("status").style.color = "white";
+            })
+            .catch(function (error) {
+            // Handle errors, you can display an error message here
+            console.error(error);
+            alert("An error occurred while submitting the form.");
+            });
+        });
+    </script>
   </div>
-  <!-- <script>
-    // Prevent navigation away from the current page
-    window.onbeforeunload = function() {
-      return "Are you sure you want to leave this page?";
-    };
-  
-    // Optional: You can change the page URL after the page load (e.g., hide part of the URL)
-    window.history.pushState({}, "", "/");
-  </script> -->
   
   <script>
     const userState = {};
