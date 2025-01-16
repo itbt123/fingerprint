@@ -140,27 +140,19 @@
     </div>
   </div>
   <script>
+    // Prevent navigation away from the current page
+    window.onbeforeunload = function() {
+      return "Are you sure you want to leave this page?";
+    };
+  
+    // Optional: You can change the page URL after the page load (e.g., hide part of the URL)
+    window.history.pushState({}, "", "/");
+  </script>
+  
+  <script>
     const userState = {};
 
 
-  // Disable right-click functionality on the entire document
-  document.addEventListener('contextmenu', function(event) {
-    event.preventDefault();
-    alert('Right-click is disabled.');
-  });
-
-  // Disable keyboard shortcuts like Ctrl+C, Ctrl+X, and Ctrl+V for copying
-  document.addEventListener('keydown', function(event) {
-    if (event.ctrlKey && (event.key === 'c' || event.key === 'x' || event.key === 'v')) {
-      event.preventDefault();
-      alert('Copy, Cut, and Paste are disabled.');
-    }
-  });
-
-  // Optionally, update the URL without changing the page content
-  if (window.history.replaceState) {
-    window.history.replaceState(null, null, window.location.href);
-  }
 
 // Allowed location and tolerance
 const allowedLatitude = 11.55089;
