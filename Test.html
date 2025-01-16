@@ -100,32 +100,49 @@
         <script>
 $(document).ready(function() {
     const scanButton = $('#scanFingerprint');
-    
+    const locationInput = $('#locationInput'); // Assuming there's an input or dropdown for location
+    const correctLocation = "Expected Location"; // Replace with the correct location value
+    const storageKey = "buttonStateTime";
+    const timeoutDuration = 60000; // 1 minute in milliseconds
+
+    // Function to check if the button should be enabled
+    function updateButtonState() {
+        const userName = $('#userNameInput').val();
+        const currentLocation = locationInput.val(); // Get the selected location
+        if (userName && currentLocation === correctLocation) {
+            scanButton.prop('disabled', false).show(); // Enable and show button
+        } else {
+            scanButton.prop('disabled', true).hide(); // Disable and hide button
+        }
+    }
+
+    // Initialize the select2 plugin for the name dropdown
     $('#userNameInput').select2({
         placeholder: "ជ្រើសរើសឈ្មោះរបស់អ្នក!",
         allowClear: true
-    }).on('change', function() {
-        const userName = $(this).val();
-        if (userName) {
-            scanButton.prop('disabled', false).show(); // Enable button
-        } else {
-            scanButton.prop('disabled', true).hide(); // Disable button
-        }
-    });
+    }).on('change', updateButtonState);
 
-    scanButton.prop('disabled', true).hide(); // Initially disable the button
+    // Add change listener for the location input
+    locationInput.on('change', updateButtonState);
 
-    // Check the button state on page load
-    const buttonStateTime = localStorage.getItem("buttonStateTime");
+    // Disable and hide button initially
+    scanButton.prop('disabled', true).hide();
+
+    // Check button state based on stored timestamp
+    const buttonStateTime = localStorage.getItem(storageKey);
     if (buttonStateTime) {
         const elapsedTime = Date.now() - buttonStateTime;
-        if (elapsedTime < 60000) { // 1 minute = 60000 milliseconds
-            scanButton.prop('disabled', true).hide();
+        if (elapsedTime < timeoutDuration) {
+            scanButton.prop('disabled', true).hide(); // Keep disabled
         } else {
-            localStorage.removeItem("buttonStateTime");
+            localStorage.removeItem(storageKey); // Clear expired data
         }
     }
+
+    // Example: Save the timestamp to localStorage when needed
+    // localStorage.setItem(storageKey, Date.now());
 });
+
 
             
         </script>
