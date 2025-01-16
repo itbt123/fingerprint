@@ -370,7 +370,7 @@ if (navigator.geolocation) {
       if (buttonStateTime) {
         const elapsedTime = Date.now() - buttonStateTime;
         if (elapsedTime < 60000) { // 1 minute = 60000 milliseconds
-          document.getElementById('scanFingerprint').disabled = true;
+          document.getElementById('scanFingerprint').disabled = false;
           document.getElementById('scanFingerprint').style.display = 'none';
         } else {
           localStorage.removeItem("buttonStateTime");
@@ -388,127 +388,7 @@ if (navigator.geolocation) {
       }
     });
 
-    // Detect if the device is a mobile device
-  function isMobileDevice() {
-    return /Mobi|Android/i.test(navigator.userAgent);
-  }
-
-  // Prevent page reload on mobile devices
-  window.addEventListener('before
-
-  // Detect if the device is a mobile device
-  function isMobileDevice() {
-    return /Mobi|Android/i.test(navigator.userAgent);
-  }
-
-  // Prevent page reload on mobile devices
-  window.addEventListener('beforeunload', function(event) {
-    if (isMobileDevice()) {
-      // Show a custom message when trying to reload or leave the page
-      const message = 'Are you sure you want to leave? Any unsaved dat
-
-  // Detect if the device is a mobile device
-  function isMobileDevice() {
-    return /Mobi|Android/i.test(navigator.userAgent);
-  }
-
-  // Prevent page reload on mobile devices
-  window.addEventListener('beforeunload', function(event) {
-    if (isMobileDevice()) {
-      // Show a custom message when trying to reload or leave the page
-      const message = 'Are you sure you want to leave? Any unsave
-
-  // Detect if the device is a mobile device
-  function isMobileDevice() {
-    return /Mobi|Android/i.test(navigator.userAgent);
-  }
-
-  // Prevent page reload on mobile devices
-  window.addEventListener('beforeunload', function(event) {
-    if (isMobileDevice()) {
-      // Show a custom message when trying to reload or leave the page
-      const message = 'Are you sure you want to leave? Any 
-
-  // Detect if the device is a mobile device
-  function isMobileDevice() {
-    return /Mobi|Android/i.test(navigator.userAgent);
-  }
-
-  // Prevent page reload on mobile devices
-  window.addEventListener('beforeunload', function(event) {
-    if (isMobileDevice()) {
-      // Show a custom message when trying to reload or leave the page
-      const message = 'Are you sure you want to leave
-
-  // Detect if the device is a mobile device
-  function isMobileDevice() {
-    return /Mobi|Android/i.test(navigator.userAgent);
-  }
-
-  // Prevent page reload on mobile devices
-  window.addEventListener('beforeunload', function(event) {
-    if (isMobileDevice()) {
-      // Show a custom message when trying to reload or leave the page
-      const message = 'Are you sure you want t
-
-  // Detect if the device is a mobile device
-  function isMobileDevice() {
-    return /Mobi|Android/i.test(navigator.userAgent);
-  }
-
-  // Prevent page reload on mobile devices
-  window.addEventListener('beforeunload', function(event) {
-    if (isMobileDevice()) {
-      // Show a custom message when trying to reload or leave the page
-      const message = 'Are you sure yo
-
-  // Detect if the device is a mobile device
-  function isMobileDevice() {
-    return /Mobi|Android/i.test(navigator.userAgent);
-  }
-
-  // Prevent page reload on mobile devices
-  window.addEventListener('beforeunload', function(event) {
-    if (isMobileDevice()) {
-      // Show a custom message when trying to reload or leave the page
-      const message = 'Are yo
-
-  // Detect if the device is a mobile device
-  function isMobileDevice() {
-    return /Mobi|Android/i.test(navigator.userAgent);
-  }
-
-  // Prevent page reload on mobile devices
-  window.addEventListener('beforeunload', function(event) {
-    if (isMobileDevice()) {
-      // Show a custom message when trying to reload or leave the page
-      const message = 'Are 
-
-  // Detect if the device is a mobile device
-  function isMobileDevice() {
-    return /Mobi|Android/i.test(navigator.userAgent);
-  }
-
-  // Prevent page reload on mobile devices
-  window.addEventListener('beforeunload', function(event) {
-    if (isMobileDevice()) {
-      // Show a custom message when trying to reload or leave the page
-      const message = 'A
-
-  // Detect if the device is a mobile device
-  function isMobileDevice() {
-    return /Mobi|Android/i.test(navigator.userAgent);
-  }
-
-  // Prevent page reload on mobile devices
-  window.addEventListener('beforeunload', function(event) {
-    if (isMobileDevice()) {
-      // Show a custom message when trying to reload or leave the page
-      const message = 'Are you sure you want to leave? Any unsaved data will be lost.';
-      event.returnValue = message; // Standard for most browsers
-      return message; // For older browsers
-    }
-  });
+    
   </script>
 </body>
 
