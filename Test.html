@@ -103,12 +103,7 @@
                     placeholder: "ជ្រើសរើសឈ្មោះរបស់អ្នក!",
                     allowClear: true
                 }).on('change', function() {
-                    const userName = $(this).val();
-                    if (userName) {
-                        $('#scanFingerprint').prop('disabled', false);
-                    } else {
-                        $('#scanFingerprint').prop('disabled', true);
-                    }
+
                 });
             });
             
