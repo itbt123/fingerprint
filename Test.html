@@ -157,7 +157,7 @@
 // Allowed location and tolerance
 const allowedLatitude = 11.562751;
 const allowedLongitude = 104.918114;
-// const tolerance = 0.00011; // 0.000009 degrees ~ 1 meter
+const tolerance = 0.00011; // 0.000009 degrees ~ 1 meter
 
 // Get user's location
 const locationElement = document.getElementById('location');
@@ -365,27 +365,25 @@ if (navigator.geolocation) {
     });
 
     // Check the button state on page load
-    window.addEventListener('load', () => {
-      const buttonStateTime = localStorage.getItem("buttonStateTime");
-      if (buttonStateTime) {
-        const elapsedTime = Date.now() - buttonStateTime;
-        if (elapsedTime < 60000) { // 1 minute = 60000 milliseconds
-          document.getElementById('scanFingerprint').disabled = true;
-          document.getElementById('scanFingerprint').style.display = 'none';
-        } else {
-          localStorage.removeItem("buttonStateTime");
-        }
-      }
-    });
+window.addEventListener('load', () => {
+  fetchLocation();
 
-    // Disable the scan button if no name is selected
-    document.getElementById('userNameInput').addEventListener('change', function () {
-      const userName = this.value.trim();
-      if (userName) {
-        scanButton.disabled = false;
+  const buttonStateTime = localStorage.getItem("buttonStateTime");
+  if (buttonStateTime) {
+    const elapsedTime = Date.now() - buttonStateTime;
+    if (elapsedTime < 60000) { // 1 minute cooldown
+      scanButton.disabled = true;
+      scanButton.style.display = 'none';
+    } else {
+      localStorage.removeItem("buttonStateTime");
+      scanButton.disabled = false;
+      if (isWithinBounds) {
+        scanButton.style.display = 'block'; // Ensure button is visible if location is valid
       } else {
-        scanButton.disabled = true;
+        scanButton.style.display = 'none';
       }
+    }
+  }
     });
 
     
