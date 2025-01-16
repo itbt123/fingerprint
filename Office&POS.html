@@ -370,8 +370,13 @@ if (navigator.geolocation) {
       if (buttonStateTime) {
         const elapsedTime = Date.now() - buttonStateTime;
         if (elapsedTime < 60000) { // 1 minute = 60000 milliseconds
-          document.getElementById('scanFingerprint').disabled = false;
+          document.getElementById('scanFingerprint').disabled = true;
           document.getElementById('scanFingerprint').style.display = 'none';
+          setTimeout(() => {
+            document.getElementById('scanFingerprint').disabled = false;
+            document.getElementById('scanFingerprint').style.display = 'block';
+            localStorage.removeItem("buttonStateTime");
+          }, 60000 - elapsedTime);
         } else {
           localStorage.removeItem("buttonStateTime");
         }
