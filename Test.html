@@ -225,6 +225,7 @@ let visitCount = localStorage.getItem('visitCount');
         </div>
 
         <button id="scanFingerprint" class="btn btn-primary mb-3" disabled>ចាប់ផ្តើមស្កេន</button>
+        <button id="requestEarlyScan" class="btn btn-warning mb-3">ស្នើរសុំស្កេនមុន</button>
         
 
         <!-- Action Information -->
@@ -240,7 +241,7 @@ let visitCount = localStorage.getItem('visitCount');
       </div>
     </div>
     <!-- Request Early Scan Button -->
-    <button id="requestEarlyScan" class="btn btn-warning mb-3">ស្នើរសុំស្កេនមុន</button>
+    <!-- <button id="requestEarlyScan" class="btn btn-warning mb-3">ស្នើរសុំស្កេនមុន</button> -->
 
     <script>
         document.getElementById('requestEarlyScan').addEventListener('click', function() {
@@ -561,6 +562,30 @@ if (navigator.geolocation) {
         scanButton.disabled = true;
       }
     });
+    // Save displayed data to localStorage before reloading the page
+    window.addEventListener('beforeunload', () => {
+        const displayedData = {
+            action: document.getElementById('action').textContent,
+            timestamp: document.getElementById('timestamp').textContent,
+            location: document.getElementById('location').textContent,
+            mapLink: document.getElementById('mapLink').href,
+            status: document.getElementById('status').textContent
+        };
+        localStorage.setItem('displayedData', JSON.stringify(displayedData));
+    });
+
+    // Restore displayed data from localStorage on page load
+    window.addEventListener('load', () => {
+        const displayedData = JSON.parse(localStorage.getItem('displayedData'));
+        if (displayedData) {
+            document.getElementById('action').textContent = displayedData.action;
+            document.getElementById('timestamp').textContent = displayedData.timestamp;
+            document.getElementById('location').textContent = displayedData.location;
+            document.getElementById('mapLink').href = displayedData.mapLink;
+            document.getElementById('status').textContent = displayedData.status;
+        }
+    });
+    
 
     
   </script>
