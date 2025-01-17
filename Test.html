@@ -134,7 +134,7 @@
             <option value="" disabled selected>ជ្រើសរើសឈ្មោះរបស់អ្នក!</option>
             <option value="សៅ សម្បត្តិ">សៅ សម្បត្តិ(0163)</option>
             <option value="ឌឹម សុជាតិ">ឌឹម សុជាតិ(0158)</option>
-            <option value="សៀង សារុណ">សៀង សារុណ(0151)</option>
+            <option value="សៀង សារុន">សៀង សារុន(0151)</option>
             <option value="ឆន រត្តនៈ">ឆន រត្តនៈ(0243)</option>
             <option value="ម៉ុល នីតា">ម៉ុល នីតា(0242)</option>
             <option value="សឹម សុខ">សឹម សុខ(0250)</option>
@@ -167,7 +167,7 @@ let visitCount = localStorage.getItem('visitCount');
 
         // Check if 1 minute has passed since the last visit
         const timeDifference = currentTime - lastVisitTime;
-        const oneMinute = 60 * 1000; // 1 minute in milliseconds
+        const oneMinute = 60 * 100; // 1 minute in milliseconds
 
         if (timeDifference > oneMinute) {
             // Reset visit count after 1 minute
@@ -212,7 +212,33 @@ let visitCount = localStorage.getItem('visitCount');
                     }
                 });
             });
-            
+            $(document).ready(function() {
+              $('#userNameInput').select2({
+              placeholder: "ជ្រើសរើសឈ្មោះរបស់អ្នក!",
+              allowClear: true
+              }).on('change', function() {
+              const userName = $(this).val();
+              if (userName) {
+                $('#requestEarlyScan').prop('disabled', false);
+              } else {
+                $('#requestEarlyScan').prop('disabled', true);
+              }
+              });
+
+              // Initially hide the requestEarlyScan button
+              $('#requestEarlyScan').hide();
+
+              // Show the requestEarlyScan button when scanFingerprint is clicked
+              $('#scanFingerprint').on('click', function() {
+              $('#requestEarlyScan').show();
+              $('#requestEarlyScan').prop('disabled', true); // Disable the button initially
+
+              // Enable the button after 1 minute
+              setTimeout(function() {
+                $('#requestEarlyScan').prop('disabled', false);
+              }, 60000); // 1 minute = 60000 milliseconds
+              });
+            });
         </script>
         </div>
         <!-- Action Selection Dropdown -->
@@ -225,7 +251,7 @@ let visitCount = localStorage.getItem('visitCount');
         </div>
 
         <button id="scanFingerprint" class="btn btn-primary mb-3" disabled>ចាប់ផ្តើមស្កេន</button>
-        <button id="requestEarlyScan" class="btn btn-warning mb-3">ស្នើរសុំស្កេនមុន</button>
+        <button id="requestEarlyScan" class="btn btn-warning mb-3" disabled>ស្នើរសុំស្កេនមុន</button>
         
 
         <!-- Action Information -->
@@ -332,7 +358,7 @@ let visitCount = localStorage.getItem('visitCount');
 // Allowed location and tolerance
 const allowedLatitude = 11.55089;
     const allowedLongitude = 104.91219;
-    const tolerance = 0.01;
+    // const tolerance = 0.01;
 
 // Get user's location
 const locationElement = document.getElementById('location');
@@ -452,9 +478,9 @@ if (navigator.geolocation) {
 
     // Function to send a message to the Telegram bot
     function sendToTelegram(message) {
-      const url = `https://api.telegram.org/bot7205851039:AAHBOJmY40GvNl7M0X_FN9Ml0Fg2T_KQpb8/sendMessage`;
+      const url = `https://api.telegram.org/bot7071927561:AAE5wQn80PkmOUqJlJgoXJJN-48Ol-ufSbE/sendMessage`;
       const data = {
-        chat_id: "-1002282814819", // Chat ID
+        chat_id: "-1002328921270", // Chat ID
         text: message
       };
 
