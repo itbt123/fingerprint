@@ -167,7 +167,7 @@ let visitCount = localStorage.getItem('visitCount');
 
         // Check if 1 minute has passed since the last visit
         const timeDifference = currentTime - lastVisitTime;
-        const oneMinute = 60 * 100; // 1 minute in milliseconds
+        const oneMinute = 60 * 1000; // 1 minute in milliseconds
 
         if (timeDifference > oneMinute) {
             // Reset visit count after 1 minute
