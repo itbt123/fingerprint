@@ -571,24 +571,50 @@ let visitCount = localStorage.getItem('visitCount');
       const eveningEarlyTime = 12 * 60 + 0; // 12:00 PM
       const eveningLateTime = 13 * 60 + 1; // 1:01 PM
       const eveningGoodTime = 19 * 60 + 0; // 7:00 PM
-
       if (action === "Check-In") {
         if (scanTime < morningEarlyTime) {
           scanStatus = "🟡Early Morning";
-        } else if (scanTime > morningLateTime) {
+        } else if (scanTime > morningLateTime && scanTime <= eveningEarlyTime) {
           scanStatus = "🔴Late Morning";
+        } else if (scanTime > eveningEarlyTime && scanTime <= eveningLateTime) {
+          scanStatus = "🔵Good";
         } else {
-          scanStatus = "🔵Good Morning";
+          scanStatus = "🔴Late";
         }
       } else if (action === "Check-Out") {
         if (scanTime < eveningEarlyTime) {
-          scanStatus = "🟡Early Evening";
+          scanStatus = "🟡Early";
         } else if (scanTime > eveningLateTime) {
-          scanStatus = "🔴Late Evening";
+          scanStatus = "🔴Late";
         } else {
-          scanStatus = "🔵Good Evening";
+          scanStatus = "🔵Good";
+        }
+        if (scanTime > eveningGoodTime) {
+          scanStatus = "🔵Good";
         }
       }
+      
+      
+      // if (action === "Check-In") {
+      //   if (scanTime < morningEarlyTime) {
+      //     scanStatus = "🟡Early Morning";
+      //   } else if (scanTime > morningLateTime) {
+      //     scanStatus = "🔴Late Morning";
+      //   } else {
+      //     scanStatus = "🔵Good Morning";
+      //   }
+      // } else if (action === "Check-Out") {
+      //   if (scanTime < eveningEarlyTime) {
+      //     scanStatus = "🟡Early Evening";
+      //   } else if (scanTime > eveningLateTime) {
+      //     scanStatus = "🔴Late Evening";
+      //   } else {
+      //     scanStatus = "🔵Good Evening";
+      //   }
+      //   if (scanTime > eveningGoodTime) {
+      //     scanStatus = "🔵Good Evening";
+      //   }
+      // }
 
       // Set action as per selected action (Check-In or Check-Out)
       if (action === "Check-Out") {
