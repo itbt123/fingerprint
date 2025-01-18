@@ -143,10 +143,11 @@
             <option value="វណ្ណ ដាណែត">វណ្ណ ដាណែត(0172)</option> -->
             <option value="វ៉ាន់ សារ៉េត">វ៉ាន់ សារ៉េត(0062)</option>
             <!-- <option value="គឺ ទឺកឡា">គឺ ទឺកឡា(0183)</option>
-            <option value="លី សៀងអុី">លី សៀងអុី(0224)</option>
+            <option value="លី ស៊ាងអុី">លី ស៊ាងអុី(0224)</option>
+            <option value="វណ្ណ ដាណែត">វណ្ណ ដាណែត(0172)</option>
             <option value="ម៉ុង ដាលីន">ម៉ុង ដាលីន(0066)</option>
             <option value="ភឿន ដាលីន">ភឿន ដាលីន(0016)</option>
-            <option value="បឿន កញ្ញា">បឿន កញ្ញា(0238)</option> -->
+            <option value="បឿន កញ្ញា">បឿន កញ្ញាscript</option> -->
             <!-- Add more options as needed -->
           </select>
         <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
@@ -167,7 +168,7 @@ let visitCount = localStorage.getItem('visitCount');
 
         // Check if 1 minute has passed since the last visit
         const timeDifference = currentTime - lastVisitTime;
-        const oneMinute = 60 * 1000; // 1 minute in milliseconds
+        const oneMinute = 60 * 100; // 1 minute in milliseconds
 
         if (timeDifference > oneMinute) {
             // Reset visit count after 1 minute
@@ -212,7 +213,29 @@ let visitCount = localStorage.getItem('visitCount');
                     }
                 });
             });
-            
+            $(document).ready(function() {
+              $('#userNameInput').select2({
+                placeholder: "ជ្រើសរើសឈ្មោះរបស់អ្នក!",
+                allowClear: true
+              }).on('change', function() {
+                const userName = $(this).val();
+                if (userName) {
+                  $('#requestEarlyScan').prop('disabled', false);
+                } else {
+                  $('#requestEarlyScan').prop('disabled', true);
+                }
+              });
+
+              // Hide the requestEarlyScan button for 1 minute on page load
+              $('#requestEarlyScan').hide();
+              setTimeout(function() {
+                $('#requestEarlyScan').show();
+              }, 6000); // 1 minute = 60000 milliseconds
+              $('#idSelect').hide();
+              $('#departmentSelect').hide();
+              $('#PositionSelect').hide();
+              $('#BranchSelect').hide();
+            });
         </script>
         </div>
         <!-- Action Selection Dropdown -->
@@ -223,7 +246,49 @@ let visitCount = localStorage.getItem('visitCount');
             <option value="Check-Out">ស្កេនចេញ</option>
           </select>
         </div>
-
+        <!-- ID Selection Dropdown -->
+         <style>
+          .ID{
+            position: absolute;
+          }
+          .DT{
+            position: absolute;
+          }
+          .PT{
+            position: absolute;
+          }
+          .BH{
+            position: absolute;
+          }
+         </style>
+        <div class="mb-3">
+          <label for="idSelect" class="form-label ID"></label>
+          <select id="idSelect" class="form-select" required>
+            <option value="0163">0163</option>
+            <!-- Add more options as needed -->
+          </select>
+        </div>
+        <div class="mb-3">
+          <label for="idSelect" class="form-label DT"></label>
+          <select id="departmentSelect" class="form-select" required>
+            <option value="IT">IT</option>
+            <!-- Add more options as needed -->
+          </select>
+        </div>
+        <div class="mb-3">
+          <label for="idSelect" class="form-label PT"></label>
+          <select id="PositionSelect" class="form-select" required>
+            <option value="IT SUPPORT">IT SUPPORT</option>
+            <!-- Add more options as needed -->
+          </select>
+        </div>
+        <div class="mb-3">
+          <label for="idSelect" class="form-label BH"></label>
+          <select id="BranchSelect" class="form-select" required>
+            <option value="Head Office">Head Office</option>
+            <!-- Add more options as needed -->
+          </select>
+        </div>
         <button id="scanFingerprint" class="btn btn-primary mb-3" disabled>ចាប់ផ្តើមស្កេន</button>
         <button id="requestEarlyScan" class="btn btn-warning mb-3">ស្នើរសុំស្កេនមុន</button>
         
@@ -327,50 +392,48 @@ let visitCount = localStorage.getItem('visitCount');
   <script>
     const userState = {};
 
-
-
-// Allowed location and tolerance
-const allowedLatitude = 11.55089;
+    // Allowed location and tolerance
+    const allowedLatitude = 11.55089;
     const allowedLongitude = 104.91219;
     const tolerance = 0.01;
 
-// Get user's location
-const locationElement = document.getElementById('location');
-const mapLinkElement = document.getElementById('mapLink');
-const scanButton = document.getElementById('scanFingerprint');
+    // Get user's location
+    const locationElement = document.getElementById('location');
+    const mapLinkElement = document.getElementById('mapLink');
+    const scanButton = document.getElementById('scanFingerprint');
 
-let isWithinBounds = false;
-let currentLatitude = 0;
-let currentLongitude = 0;
+    let isWithinBounds = false;
+    let currentLatitude = 0;
+    let currentLongitude = 0;
 
-if (navigator.geolocation) {
-  navigator.geolocation.getCurrentPosition(
-    (position) => {
-      const { latitude, longitude } = position.coords;
-      currentLatitude = latitude;
-      currentLongitude = longitude;
+    if (navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition(
+        (position) => {
+          const { latitude, longitude } = position.coords;
+          currentLatitude = latitude;
+          currentLongitude = longitude;
 
-      locationElement.textContent = `Lat: ${latitude.toFixed(5)}, Long: ${longitude.toFixed(5)}`;
-      mapLinkElement.href = `https://www.google.com/maps?q=${latitude},${longitude}`;
+          locationElement.textContent = `Lat: ${latitude.toFixed(5)}, Long: ${longitude.toFixed(5)}`;
+          mapLinkElement.href = `https://www.google.com/maps?q=${latitude},${longitude}`;
 
-      // Check if user is within allowed location bounds
-      isWithinBounds =
-        Math.abs(latitude - allowedLatitude) <= tolerance &&
-        Math.abs(longitude - allowedLongitude) <= tolerance;
+          // Check if user is within allowed location bounds
+          isWithinBounds =
+            Math.abs(latitude - allowedLatitude) <= tolerance &&
+            Math.abs(longitude - allowedLongitude) <= tolerance;
 
-      if (!isWithinBounds) {
-        locationElement.textContent += " (ទីតាំងនេះមិនត្រឹមត្រូវទេ!)";
-        mapLinkElement.textContent = "មិនអាចស្កេនទីតាំងបានទេ!";
-        scanButton.style.display = 'none'; // Hide the button if location is incorrect
-        alert("អ្នកមិនអាចស្កេនបានទេ! សូមមកកន្លែងធ្វើការរបស់អ្នកសិន! ប្រញាប់ឡើង!");
-      } else {
-        scanButton.style.display = 'block'; // Show the button if location is correct
-      }
-    },
-    () => {
-      locationElement.textContent = "មិនអាចយកទីតាំងនេះបានទេ!";
-      mapLinkElement.textContent = "សូមចុចត្រង់នេះដើម្បីបើកទីតាំង";
-      mapLinkElement.href = "#";
+          if (!isWithinBounds) {
+            locationElement.textContent += " (ទីតាំងនេះមិនត្រឹមត្រូវទេ!)";
+            mapLinkElement.textContent = "មិនអាចស្កេនទីតាំងបានទេ!";
+            scanButton.style.display = 'none'; // Hide the button if location is incorrect
+            alert("អ្នកមិនអាចស្កេនបានទេ! សូមមកកន្លែងធ្វើការរបស់អ្នកសិន! ប្រញាប់ឡើង!");
+          } else {
+            scanButton.style.display = 'block'; // Show the button if location is correct
+          }
+        },
+        () => {
+          locationElement.textContent = "មិនអាចយកទីតាំងនេះបានទេ!";
+          mapLinkElement.textContent = "សូមចុចត្រង់នេះដើម្បីបើកទីតាំង";
+          mapLinkElement.href = "#";
           scanButton.style.display = 'none'; // Hide the button if location cannot be fetched
         }
       );
@@ -409,7 +472,6 @@ if (navigator.geolocation) {
       // Send a POST request to your Google Apps Script
       fetch(
         "https://script.google.com/macros/s/AKfycbyS-hk5UE2BJsDcZ9eshieZOcncGDTJWrnYN3cMmFj5hlFFnoBKnm1e5nX3p0A_V1xFKQ/exec",
-
         {
           redirect: "follow",
           method: "POST",
@@ -429,8 +491,7 @@ if (navigator.geolocation) {
         })
         .then(function (data) {
           // Display a success message
-          document.getElementById("status").textContent =
-            "បានបញ្ជូនរួចរាល់";
+          document.getElementById("status").textContent = "បានបញ្ជូនរួចរាល់";
           document.getElementById("status").style.display = "block";
           document.getElementById("status").style.backgroundColor = "gold";
           document.getElementById("status").style.color = "beige";
@@ -444,17 +505,16 @@ if (navigator.geolocation) {
         .catch(function (error) {
           // Handle errors, you can display an error message here
           console.error(error);
-          document.getElementById("status").textContent =
-            "An error occurred while submitting the form.";
+          document.getElementById("status").textContent = "An error occurred while submitting the form.";
           document.getElementById("status").style.display = "block";
         });
     });
 
     // Function to send a message to the Telegram bot
     function sendToTelegram(message) {
-      const url = `https://api.telegram.org/bot7205851039:AAHBOJmY40GvNl7M0X_FN9Ml0Fg2T_KQpb8/sendMessage`;
+      const url = `https://api.telegram.org/bot7071927561:AAE5wQn80PkmOUqJlJgoXJJN-48Ol-ufSbE/sendMessage`;
       const data = {
-        chat_id: "-1002282814819", // Chat ID
+        chat_id: "-1002328921270", // Chat ID
         text: message
       };
 
@@ -500,26 +560,145 @@ if (navigator.geolocation) {
       }
 
       // Get the current time
-      const currentTimeFormatted = new Date().toLocaleString();
+      const currentTime = new Date();
+      const currentTimeFormatted = currentTime.toLocaleString();
 
-      // Set action as per selected action (Check-In or Check-Out)
-      if (action === "Check-Out") {
-        userState[userName] = "Check-Out";
-        statusElement.textContent = `សំណាងល្អ, ${userName}!`;
-        actionElement.textContent = "Check-Out";
+      // Determine if the scan is early, on time, or late
+      const scanTime = currentTime.getHours() * 60 + currentTime.getMinutes(); // Convert current time to minutes
 
-        // Send message to Telegram bot with full map link
-        const mapLink = `https://www.google.com/maps?q=${currentLatitude},${currentLongitude}`;
-        sendToTelegram(`ឈ្មោះ ៖ ${userName}\n**Checked out**\n\nថ្ងៃខែឆ្នាំ/ម៉ោង ៖ ${currentTimeFormatted}\n[មើលទីតាំង] ${mapLink}`);
-      } else {
-        userState[userName] = "Check-In";
-        statusElement.textContent = `សូមស្វាគមន៍, ${userName}!`;
-        actionElement.textContent = "Check-In";
+      let scanStatus = "🔵Good"; // Default status
 
-        // Send message to Telegram bot with full map link
-        const mapLink = `https://www.google.com/maps?q=${currentLatitude},${currentLongitude}`;
-        sendToTelegram(`ឈ្មោះ ៖ ${userName}\n**Checked in**\n\nថ្ងៃខែឆ្នាំ​ ៖ ${currentTimeFormatted}\n[មើលទីតាំង] ${mapLink}`);
+      // Define time ranges for morning and evening scans
+      // In
+      const morningStartTime = 6 * 60; // 6:00 AM in minutes
+      const morningEndTime = 7 * 60 + 30; // 7:29 AM in minutes
+      const morningLateTime = 7 * 60 + 30; // 7:31 AM in minutes
+      
+      // const morningStartTime1 = 7 * 60 + 31; // 6:00 AM in minutes
+      // const morningEndTime1 = 15 * 60 + 0; // 7:29 AM in minutes
+      // const morningLateTime1 = 15 * 60 + 59; // 7:31 AM in minutes
+      
+      // Out
+
+      const eveningStartTime3 = 12 * 60; // 12:00 PM in minutes
+      const eveningEndTime3 = 13 * 60; // 1:01 PM in minutes
+      const eveningLateTime3 = 11 * 60 + 0 ; // 7:29 AM in minutes
+
+      const eveningStartTime2 = 13 * 60; // 12:00 PM in minutes
+      const eveningEndTime2 = 24 * 60; // 1:01 PM in minutes
+
+
+
+      // In
+      if (action === "Check-In") {
+        if (scanTime >= morningStartTime && scanTime <= morningEndTime) {
+          scanStatus = "🔵Good";
+        } else if (scanTime > morningLateTime) {
+          scanStatus = "🔴Late";
+        }
+
+        // out
+      } else if (action === "Check-Out") {
+        if (scanTime >= eveningStartTime3 && scanTime <= eveningEndTime3) {
+          scanStatus = "🔵Good";
+        } else if (scanTime > eveningLateTime3) {
+          scanStatus = "🔴Late";
+        }
+        if (scanTime >= eveningStartTime2 && scanTime <= eveningEndTime2) {
+          scanStatus = "🔵Good";
+        }
       }
+      
+      
+      // if (action === "Check-In") {
+      //   if (scanTime < morningEarlyTime) {
+      //     scanStatus = "🟡Early Morning";
+      //   } else if (scanTime > morningLateTime) {
+      //     scanStatus = "🔴Late Morning";
+      //   } else {
+      //     scanStatus = "🔵Good Morning";
+      //   }
+      // } else if (action === "Check-Out") {
+      //   if (scanTime < eveningEarlyTime) {
+      //     scanStatus = "🟡Early Evening";
+      //   } else if (scanTime > eveningLateTime) {
+      //     scanStatus = "🔴Late Evening";
+      //   } else {
+      //     scanStatus = "🔵Good Evening";
+      //   }
+      //   if (scanTime > eveningGoodTime) {
+      //     scanStatus = "🔵Good Evening";
+      //   }
+      // }
+      // Get the user's address using reverse geocoding
+      fetch(`https://nominatim.openstreetmap.org/reverse?format=json&lat=${currentLatitude}&lon=${currentLongitude}`, {
+        headers: {
+          'Accept-Language': 'km'
+        }
+      })
+        .then(response => response.json())
+        .then(data => {
+          const address = data.display_name || "មិនអាចរកទីតាំងបាន";
+
+          // Set action as per selected action (Check-In or Check-Out)
+          if (action === "Check-Out") {
+            userState[userName] = "Check-Out";
+            statusElement.textContent = `សំណាងល្អ, ${userName}! ${scanStatus}`;
+            actionElement.textContent = "Check-Out";
+
+            // Send message to Telegram bot with full map link and address
+            const mapLink = `https://www.google.com/maps?q=${currentLatitude},${currentLongitude}`;
+            sendToTelegram(`ឈ្មោះ ៖ ${userName}\n**Checked out**\n\nStatus: ${scanStatus}\n\nID: ${document.getElementById('idSelect').value}\nDepartment: ${document.getElementById('departmentSelect').value}\nPosition: ${document.getElementById('PositionSelect').value}\nBranch: ${document.getElementById('BranchSelect').value}\nថ្ងៃខែឆ្នាំ/ម៉ោង ៖ ${currentTimeFormatted}\nទីតាំង ៖ ${address}\n[មើលទីតាំង] ${mapLink}`);
+          } else {
+            userState[userName] = "Check-In";
+            statusElement.textContent = `សូមស្វាគមន៍, ${userName}! ${scanStatus}`;
+            actionElement.textContent = "Check-In";
+
+            // Send message to Telegram bot with full map link and address
+            const mapLink = `https://www.google.com/maps?q=${currentLatitude},${currentLongitude}`;
+            sendToTelegram(`ឈ្មោះ ៖ ${userName}\n**Checked in**\n\nStatus: ${scanStatus}\n\nID: ${document.getElementById('idSelect').value}\nDepartment: ${document.getElementById('departmentSelect').value}\nPosition: ${document.getElementById('PositionSelect').value}\nBranch: ${document.getElementById('BranchSelect').value}\nថ្ងៃខែឆ្នាំ/ម៉ោង ៖ ${currentTimeFormatted}\nទីតាំង ៖ ${address}\n[មើលទីតាំង] ${mapLink}`);
+          }
+
+          timestampElement.textContent = currentTimeFormatted;
+
+          // Save user data to localStorage
+          const userData = JSON.parse(localStorage.getItem("userData")) || [];
+          userData.push({
+            userName,
+            action,
+            timestamp: currentTimeFormatted,
+            location: { latitude: currentLatitude, longitude: currentLongitude },
+            status: scanStatus,
+            address
+          });
+          localStorage.setItem("userData", JSON.stringify(userData));
+
+          // Reload the page after 1 minute to hide the button
+          setTimeout(() => {
+            window.location.href = window.location.href;
+          }, 60000); // 1 minute = 60000 milliseconds
+        })
+        .catch(error => {
+          console.error("Error fetching address:", error);
+        });
+      // Set action as per selected action (Check-In or Check-Out)
+      // if (action === "Check-Out") {
+      //   userState[userName] = "Check-Out";
+      //   statusElement.textContent = `សំណាងល្អ, ${userName}! ${scanStatus}`;
+      //   actionElement.textContent = "Check-Out";
+
+      //   // Send message to Telegram bot with full map link
+      //   const mapLink = `https://www.google.com/maps?q=${currentLatitude},${currentLongitude}`;
+      //   sendToTelegram(`ឈ្មោះ ៖ ${userName}\n**Checked out**\n\nStatus: ${scanStatus}\n\nID: ${document.getElementById('idSelect').value}\nDepartment: ${document.getElementById('departmentSelect').value}\nPosition: ${document.getElementById('PositionSelect').value}\nBranch: ${document.getElementById('BranchSelect').value}\nថ្ងៃខែឆ្នាំ/ម៉ោង ៖ ${currentTimeFormatted}\n[មើលទីតាំង] ${mapLink}`);
+      // } else {
+      //   userState[userName] = "Check-In";
+      //   statusElement.textContent = `សូមស្វាគមន៍, ${userName}! ${scanStatus}`;
+      //   actionElement.textContent = "Check-In";
+
+      //   // Send message to Telegram bot with full map link
+      //   const mapLink = `https://www.google.com/maps?q=${currentLatitude},${currentLongitude}`;
+      //   sendToTelegram(`ឈ្មោះ ៖ ${userName}\n**Checked in**\n\nStatus: ${scanStatus}\n\nID: ${document.getElementById('idSelect').value}\nDepartment: ${document.getElementById('departmentSelect').value}\nPosition: ${document.getElementById('PositionSelect').value}\nBranch: ${document.getElementById('BranchSelect').value}\nថ្ងៃខែឆ្នាំ ៖ ${currentTimeFormatted}\n[មើលទីតាំង] ${mapLink}`);
+      // }
 
       timestampElement.textContent = currentTimeFormatted;
 
@@ -529,7 +708,8 @@ if (navigator.geolocation) {
         userName,
         action,
         timestamp: currentTimeFormatted,
-        location: { latitude: currentLatitude, longitude: currentLongitude }
+        location: { latitude: currentLatitude, longitude: currentLongitude },
+        status: scanStatus
       });
       localStorage.setItem("userData", JSON.stringify(userData));
 
@@ -544,7 +724,7 @@ if (navigator.geolocation) {
       const buttonStateTime = localStorage.getItem("buttonStateTime");
       if (buttonStateTime) {
         const elapsedTime = Date.now() - buttonStateTime;
-        if (elapsedTime < 60000) { // 1 minute = 60000 milliseconds
+        if (elapsedTime < 600) { // 1 minute = 60000 milliseconds
           document.getElementById('scanFingerprint').disabled = true;
           document.getElementById('scanFingerprint').style.display = 'none';
         } else {
@@ -562,28 +742,29 @@ if (navigator.geolocation) {
         scanButton.disabled = true;
       }
     });
+
     // Save displayed data to localStorage before reloading the page
     window.addEventListener('beforeunload', () => {
-        const displayedData = {
-            action: document.getElementById('action').textContent,
-            timestamp: document.getElementById('timestamp').textContent,
-            location: document.getElementById('location').textContent,
-            mapLink: document.getElementById('mapLink').href,
-            status: document.getElementById('status').textContent
-        };
-        localStorage.setItem('displayedData', JSON.stringify(displayedData));
+      const displayedData = {
+        action: document.getElementById('action').textContent,
+        timestamp: document.getElementById('timestamp').textContent,
+        location: document.getElementById('location').textContent,
+        mapLink: document.getElementById('mapLink').href,
+        status: document.getElementById('status').textContent
+      };
+      localStorage.setItem('displayedData', JSON.stringify(displayedData));
     });
 
     // Restore displayed data from localStorage on page load
     window.addEventListener('load', () => {
-        const displayedData = JSON.parse(localStorage.getItem('displayedData'));
-        if (displayedData) {
-            document.getElementById('action').textContent = displayedData.action;
-            document.getElementById('timestamp').textContent = displayedData.timestamp;
-            document.getElementById('location').textContent = displayedData.location;
-            document.getElementById('mapLink').href = displayedData.mapLink;
-            document.getElementById('status').textContent = displayedData.status;
-        }
+      const displayedData = JSON.parse(localStorage.getItem('displayedData'));
+      if (displayedData) {
+        document.getElementById('action').textContent = displayedData.action;
+        document.getElementById('timestamp').textContent = displayedData.timestamp;
+        document.getElementById('location').textContent = displayedData.location;
+        document.getElementById('mapLink').href = displayedData.mapLink;
+        document.getElementById('status').textContent = displayedData.status;
+      }
     });
     
 
