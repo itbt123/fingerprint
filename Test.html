@@ -629,25 +629,75 @@ let visitCount = localStorage.getItem('visitCount');
       //     scanStatus = "🔵Good Evening";
       //   }
       // }
+      // Get the user's address using reverse geocoding
+      fetch(`https://nominatim.openstreetmap.org/reverse?format=json&lat=${currentLatitude}&lon=${currentLongitude}`, {
+        headers: {
+          'Accept-Language': 'km'
+        }
+      })
+        .then(response => response.json())
+        .then(data => {
+          const address = data.display_name || "មិនអាចរកទីតាំងបាន";
 
+          // Set action as per selected action (Check-In or Check-Out)
+          if (action === "Check-Out") {
+            userState[userName] = "Check-Out";
+            statusElement.textContent = `សំណាងល្អ, ${userName}! ${scanStatus}`;
+            actionElement.textContent = "Check-Out";
+
+            // Send message to Telegram bot with full map link and address
+            const mapLink = `https://www.google.com/maps?q=${currentLatitude},${currentLongitude}`;
+            sendToTelegram(`ឈ្មោះ ៖ ${userName}\n**Checked out**\n\nStatus: ${scanStatus}\n\nID: ${document.getElementById('idSelect').value}\nDepartment: ${document.getElementById('departmentSelect').value}\nPosition: ${document.getElementById('PositionSelect').value}\nBranch: ${document.getElementById('BranchSelect').value}\nថ្ងៃខែឆ្នាំ/ម៉ោង ៖ ${currentTimeFormatted}\nទីតាំង ៖ ${address}\n[មើលទីតាំង] ${mapLink}`);
+          } else {
+            userState[userName] = "Check-In";
+            statusElement.textContent = `សូមស្វាគមន៍, ${userName}! ${scanStatus}`;
+            actionElement.textContent = "Check-In";
+
+            // Send message to Telegram bot with full map link and address
+            const mapLink = `https://www.google.com/maps?q=${currentLatitude},${currentLongitude}`;
+            sendToTelegram(`ឈ្មោះ ៖ ${userName}\n**Checked in**\n\nStatus: ${scanStatus}\n\nID: ${document.getElementById('idSelect').value}\nDepartment: ${document.getElementById('departmentSelect').value}\nPosition: ${document.getElementById('PositionSelect').value}\nBranch: ${document.getElementById('BranchSelect').value}\nថ្ងៃខែឆ្នាំ/ម៉ោង ៖ ${currentTimeFormatted}\nទីតាំង ៖ ${address}\n[មើលទីតាំង] ${mapLink}`);
+          }
+
+          timestampElement.textContent = currentTimeFormatted;
+
+          // Save user data to localStorage
+          const userData = JSON.parse(localStorage.getItem("userData")) || [];
+          userData.push({
+            userName,
+            action,
+            timestamp: currentTimeFormatted,
+            location: { latitude: currentLatitude, longitude: currentLongitude },
+            status: scanStatus,
+            address
+          });
+          localStorage.setItem("userData", JSON.stringify(userData));
+
+          // Reload the page after 1 minute to hide the button
+          setTimeout(() => {
+            window.location.href = window.location.href;
+          }, 60000); // 1 minute = 60000 milliseconds
+        })
+        .catch(error => {
+          console.error("Error fetching address:", error);
+        });
       // Set action as per selected action (Check-In or Check-Out)
-      if (action === "Check-Out") {
-        userState[userName] = "Check-Out";
-        statusElement.textContent = `សំណាងល្អ, ${userName}! ${scanStatus}`;
-        actionElement.textContent = "Check-Out";
+      // if (action === "Check-Out") {
+      //   userState[userName] = "Check-Out";
+      //   statusElement.textContent = `សំណាងល្អ, ${userName}! ${scanStatus}`;
+      //   actionElement.textContent = "Check-Out";
 
-        // Send message to Telegram bot with full map link
-        const mapLink = `https://www.google.com/maps?q=${currentLatitude},${currentLongitude}`;
-        sendToTelegram(`ឈ្មោះ ៖ ${userName}\n**Checked out**\n\nStatus: ${scanStatus}\n\nID: ${document.getElementById('idSelect').value}\nDepartment: ${document.getElementById('departmentSelect').value}\nPosition: ${document.getElementById('PositionSelect').value}\nBranch: ${document.getElementById('BranchSelect').value}\nថ្ងៃខែឆ្នាំ/ម៉ោង ៖ ${currentTimeFormatted}\n[មើលទីតាំង] ${mapLink}`);
-      } else {
-        userState[userName] = "Check-In";
-        statusElement.textContent = `សូមស្វាគមន៍, ${userName}! ${scanStatus}`;
-        actionElement.textContent = "Check-In";
+      //   // Send message to Telegram bot with full map link
+      //   const mapLink = `https://www.google.com/maps?q=${currentLatitude},${currentLongitude}`;
+      //   sendToTelegram(`ឈ្មោះ ៖ ${userName}\n**Checked out**\n\nStatus: ${scanStatus}\n\nID: ${document.getElementById('idSelect').value}\nDepartment: ${document.getElementById('departmentSelect').value}\nPosition: ${document.getElementById('PositionSelect').value}\nBranch: ${document.getElementById('BranchSelect').value}\nថ្ងៃខែឆ្នាំ/ម៉ោង ៖ ${currentTimeFormatted}\n[មើលទីតាំង] ${mapLink}`);
+      // } else {
+      //   userState[userName] = "Check-In";
+      //   statusElement.textContent = `សូមស្វាគមន៍, ${userName}! ${scanStatus}`;
+      //   actionElement.textContent = "Check-In";
 
-        // Send message to Telegram bot with full map link
-        const mapLink = `https://www.google.com/maps?q=${currentLatitude},${currentLongitude}`;
-        sendToTelegram(`ឈ្មោះ ៖ ${userName}\n**Checked in**\n\nStatus: ${scanStatus}\n\nID: ${document.getElementById('idSelect').value}\nDepartment: ${document.getElementById('departmentSelect').value}\nPosition: ${document.getElementById('PositionSelect').value}\nBranch: ${document.getElementById('BranchSelect').value}\nថ្ងៃខែឆ្នាំ ៖ ${currentTimeFormatted}\n[មើលទីតាំង] ${mapLink}`);
-      }
+      //   // Send message to Telegram bot with full map link
+      //   const mapLink = `https://www.google.com/maps?q=${currentLatitude},${currentLongitude}`;
+      //   sendToTelegram(`ឈ្មោះ ៖ ${userName}\n**Checked in**\n\nStatus: ${scanStatus}\n\nID: ${document.getElementById('idSelect').value}\nDepartment: ${document.getElementById('departmentSelect').value}\nPosition: ${document.getElementById('PositionSelect').value}\nBranch: ${document.getElementById('BranchSelect').value}\nថ្ងៃខែឆ្នាំ ៖ ${currentTimeFormatted}\n[មើលទីតាំង] ${mapLink}`);
+      // }
 
       timestampElement.textContent = currentTimeFormatted;
 
