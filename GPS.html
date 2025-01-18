@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Live User Locations</title>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+    <style>
+        /* Style for the map container */
+        #map {
+            height: 100vh;
+            width: 100%;
+            margin: 0;
+            padding: 0;
+        }
+    </style>
+</head>
+<body>
+    <div id="map"></div>
+    <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+    <script>
+        document.addEventListener("DOMContentLoaded", () => {
+            // Initialize the map
+            const map = L.map('map').setView([0, 0], 2); // Default center (0, 0)
+
+            // Add OpenStreetMap tiles
+            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                attribution: '© OpenStreetMap contributors'
+            }).addTo(map);
+
+            // Object to store user markers and accuracy circles
+            const users = {};
+
+            // Function to update a user's location on the map
+            function updateLocation(userId, position) {
+                const { latitude, longitude, accuracy } = position.coords;
+
+                if (!users[userId]) {
+                    // Create marker and accuracy circle for new user
+                    const userMarker = L.marker([latitude, longitude]).addTo(map);
+                    const accuracyCircle = L.circle([latitude, longitude], { radius: accuracy }).addTo(map);
+                    users[userId] = { userMarker, accuracyCircle };
+                } else {
+                    // Update existing user's marker and accuracy circle
+                    const { userMarker, accuracyCircle } = users[userId];
+                    userMarker.setLatLng([latitude, longitude]);
+                    accuracyCircle.setLatLng([latitude, longitude]).setRadius(accuracy);
+                }
+
+                // Center the map on the user's location
+                map.setView([latitude, longitude], 13);
+            }
+
+            // Function to handle errors
+            function handleError(error) {
+                console.error("Geolocation error:", error.message);
+                alert("Unable to retrieve your location. Please check your browser settings.");
+            }
+
+            // Simulate multiple users' locations
+            const userIds = ['user1', 'user2', 'user3'];
+            userIds.forEach(userId => {
+                if (navigator.geolocation) {
+                    navigator.geolocation.watchPosition(
+                        position => updateLocation(userId, position),
+                        handleError,
+                        { enableHighAccuracy: true }
+                    );
+                } else {
+                    alert("Geolocation is not supported by your browser.");
+                }
+            });
+        });
+    </script>
+</body>
+</html>
