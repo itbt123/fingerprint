@@ -13,7 +13,7 @@
 <body class="bg-light text-center">
 
     <div class="container mt-5">
-        <h1>ផ្ញើរទីតាំងរបស់អ្នក</h1>
+        <h3>ផ្ញើរទីតាំងរបស់អ្នក</h3>
         <button id="arrivedLocationBtn" class="btn btn-primary mt-4">
             បានមកដល់ទីតាំង
         </button>
@@ -26,6 +26,16 @@
         const telegramBotToken = "7071927561:AAE5wQn80PkmOUqJlJgoXJJN-48Ol-ufSbE"; // Replace with your bot token
         const chatId = "-1002328921270"; // Replace with your chat ID
 
+        const getAddress = async (latitude, longitude) => {
+            const response = await fetch(`https://nominatim.openstreetmap.org/reverse?format=json&lat=${latitude}&lon=${longitude}`, {
+                headers: {
+                    'Accept-Language': 'km'
+                }
+            });
+            const data = await response.json();
+            return data.display_name;
+        };
+
         const sendLocation = (type) => {
             if (!navigator.geolocation) {
                 alert("Geolocation is not supported by your browser.");
@@ -37,17 +47,18 @@
                     const { latitude, longitude } = position.coords;
 
                     try {
+                        const address = await getAddress(latitude, longitude);
                         const response = await fetch(`https://api.telegram.org/bot7071927561:AAE5wQn80PkmOUqJlJgoXJJN-48Ol-ufSbE/sendMessage`, {
                             method: 'POST',
                             headers: { 'Content-Type': 'application/json' },
                             body: JSON.stringify({
                                 chat_id: chatId,
-                                text: `${type} - https://www.google.com/maps?q=${latitude},${longitude}`,
+                                text: `${type} \n ==> https://www.google.com/maps?q=${latitude},${longitude} \n\n អាសយដ្ឋាន: ${address}`,
                             }),
                         });
 
                         if (response.ok) {
-                            alert(`${type} location sent successfully!`);
+                            alert(`${type} បានផ្ញើររួចរាល់ហើយ។`);
                         } else {
                             alert(`Failed to send ${type} location.`);
                         }
@@ -61,8 +72,8 @@
             );
         };
 
-        document.getElementById('arrivedLocationBtn').addEventListener('click', () => sendLocation('បានមកដល់ទីតាំង'));
-        document.getElementById('returnedWarehouseBtn').addEventListener('click', () => sendLocation('បានត្រឡបមកឃ្លាំងវិញ'));
+        document.getElementById('arrivedLocationBtn').addEventListener('click', () => sendLocation('បានមកដល់ទីតាំង✅'));
+        document.getElementById('returnedWarehouseBtn').addEventListener('click', () => sendLocation('បានត្រឡប់មកឃ្លាំងវិញ'));
     </script>
 
 </body>
