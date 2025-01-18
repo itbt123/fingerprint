@@ -53,7 +53,7 @@
                             headers: { 'Content-Type': 'application/json' },
                             body: JSON.stringify({
                                 chat_id: chatId,
-                                text: `${type} \n ==> https://www.google.com/maps?q=${latitude},${longitude} \n\n អាសយដ្ឋាន: ${address}`,
+                                text: `${type} \n\n អាសយដ្ឋាន: ${address}\n ==> https://www.google.com/maps?q=${latitude},${longitude}`,
                             }),
                         });
 
