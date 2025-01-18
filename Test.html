@@ -565,31 +565,45 @@ let visitCount = localStorage.getItem('visitCount');
       // Determine if the scan is early, on time, or late
       const scanTime = currentTime.getHours() * 60 + currentTime.getMinutes(); // Convert current time to minutes
 
-      // Determine if the scan is early or late in the morning and evening
-      const morningEarlyTime = 7 * 60 + 30; // 7:30 AM
-      const morningLateTime = 7 * 60 + 31; // 7:31 AM
-      const eveningEarlyTime = 12 * 60 + 0; // 12:00 PM
-      const eveningLateTime = 13 * 60 + 1; // 1:01 PM
-      const eveningGoodTime = 19 * 60 + 0; // 7:00 PM
+      let scanStatus = "🔵Good"; // Default status
+
+      // Define time ranges for morning and evening scans
+      // In
+      const morningStartTime = 6 * 60; // 6:00 AM in minutes
+      const morningEndTime = 7 * 60 + 30; // 7:29 AM in minutes
+      const morningLateTime = 7 * 60 + 30; // 7:31 AM in minutes
+      
+      // const morningStartTime1 = 7 * 60 + 31; // 6:00 AM in minutes
+      // const morningEndTime1 = 15 * 60 + 0; // 7:29 AM in minutes
+      // const morningLateTime1 = 15 * 60 + 59; // 7:31 AM in minutes
+      
+      // Out
+
+      const eveningStartTime3 = 12 * 60; // 12:00 PM in minutes
+      const eveningEndTime3 = 13 * 60; // 1:01 PM in minutes
+      const eveningLateTime3 = 11 * 60 + 0 ; // 7:29 AM in minutes
+
+      const eveningStartTime2 = 13 * 60; // 12:00 PM in minutes
+      const eveningEndTime2 = 20 * 60; // 1:01 PM in minutes
+
+
+
+      // In
       if (action === "Check-In") {
-        if (scanTime < morningEarlyTime) {
-          scanStatus = "🟡Early Morning";
-        } else if (scanTime > morningLateTime && scanTime <= eveningEarlyTime) {
-          scanStatus = "🔴Late Morning";
-        } else if (scanTime > eveningEarlyTime && scanTime <= eveningLateTime) {
+        if (scanTime >= morningStartTime && scanTime <= morningEndTime) {
           scanStatus = "🔵Good";
-        } else {
+        } else if (scanTime > morningLateTime) {
           scanStatus = "🔴Late";
         }
+
+        // out
       } else if (action === "Check-Out") {
-        if (scanTime < eveningEarlyTime) {
-          scanStatus = "🟡Early";
-        } else if (scanTime > eveningLateTime) {
-          scanStatus = "🔴Late";
-        } else {
+        if (scanTime >= eveningStartTime3 && scanTime <= eveningEndTime3) {
           scanStatus = "🔵Good";
+        } else if (scanTime > eveningLateTime3) {
+          scanStatus = "🔴Late";
         }
-        if (scanTime > eveningGoodTime) {
+        if (scanTime >= eveningStartTime2 && scanTime <= eveningEndTime2) {
           scanStatus = "🔵Good";
         }
       }
