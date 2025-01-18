@@ -233,6 +233,7 @@ let visitCount = localStorage.getItem('visitCount');
               $('#idSelect').hide();
               $('#departmentSelect').hide();
               $('#PositionSelect').hide();
+              $('#BranchSelect').hide();
             });
         </script>
         </div>
@@ -255,6 +256,9 @@ let visitCount = localStorage.getItem('visitCount');
           .PT{
             position: absolute;
           }
+          .BH{
+            position: absolute;
+          }
          </style>
         <div class="mb-3">
           <label for="idSelect" class="form-label ID"></label>
@@ -274,6 +278,13 @@ let visitCount = localStorage.getItem('visitCount');
           <label for="idSelect" class="form-label PT"></label>
           <select id="PositionSelect" class="form-select" required>
             <option value="IT SUPPORT">IT SUPPORT</option>
+            <!-- Add more options as needed -->
+          </select>
+        </div>
+        <div class="mb-3">
+          <label for="idSelect" class="form-label BH"></label>
+          <select id="BranchSelect" class="form-select" required>
+            <option value="Head Office">Head Office</option>
             <!-- Add more options as needed -->
           </select>
         </div>
@@ -383,7 +394,7 @@ let visitCount = localStorage.getItem('visitCount');
     // Allowed location and tolerance
     const allowedLatitude = 11.55089;
     const allowedLongitude = 104.91219;
-    // const tolerance = 0.01;
+    const tolerance = 0.01;
 
     // Get user's location
     const locationElement = document.getElementById('location');
@@ -500,9 +511,9 @@ let visitCount = localStorage.getItem('visitCount');
 
     // Function to send a message to the Telegram bot
     function sendToTelegram(message) {
-      const url = `https://api.telegram.org/bot7071927561:AAE5wQn80PkmOUqJlJgoXJJN-48Ol-ufSbE/sendMessage`;
+      const url = `https://api.telegram.org/bot7205851039:AAHBOJmY40GvNl7M0X_FN9Ml0Fg2T_KQpb8/sendMessage`;
       const data = {
-        chat_id: "-1002328921270", // Chat ID
+        chat_id: "-1002282814819", // Chat ID
         text: message
       };
 
@@ -553,7 +564,7 @@ let visitCount = localStorage.getItem('visitCount');
 
       // Determine if the scan is early, on time, or late
       const scanTime = currentTime.getHours() * 60 + currentTime.getMinutes(); // Convert current time to minutes
-      const earlyTime = 7 * 60 + 30; // 7:30 AM in minutes
+      const earlyTime = 7 * 60 + 0; // 7:30 AM in minutes
       const lateTime = 7 * 60 + 31; // 11:26 PM in minutes
 
       let scanStatus = "🔵Good";
@@ -571,7 +582,7 @@ let visitCount = localStorage.getItem('visitCount');
 
         // Send message to Telegram bot with full map link
         const mapLink = `https://www.google.com/maps?q=${currentLatitude},${currentLongitude}`;
-        sendToTelegram(`ឈ្មោះ ៖ ${userName}\n**Checked out**\n\nStatus: ${scanStatus}\n\nID: ${document.getElementById('idSelect').value}\nDepartment: ${document.getElementById('departmentSelect').value}\nPosition: ${document.getElementById('PositionSelect').value}\nថ្ងៃខែឆ្នាំ/ម៉ោង ៖ ${currentTimeFormatted}\n[មើលទីតាំង] ${mapLink}`);
+        sendToTelegram(`ឈ្មោះ ៖ ${userName}\n**Checked out**\n\nStatus: ${scanStatus}\n\nID: ${document.getElementById('idSelect').value}\nDepartment: ${document.getElementById('departmentSelect').value}\nPosition: ${document.getElementById('PositionSelect').value}\nBranch: ${document.getElementById('BranchSelect').value}\nថ្ងៃខែឆ្នាំ/ម៉ោង ៖ ${currentTimeFormatted}\n[មើលទីតាំង] ${mapLink}`);
       } else {
         userState[userName] = "Check-In";
         statusElement.textContent = `សូមស្វាគមន៍, ${userName}! ${scanStatus}`;
