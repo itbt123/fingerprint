@@ -569,78 +569,24 @@ let visitCount = localStorage.getItem('visitCount');
       const currentTime = new Date();
       const currentTimeFormatted = currentTime.toLocaleString();
 
-      // Determine if the scan is early, on time, or late
-      const scanTime = currentTime.getHours() * 60 + currentTime.getMinutes(); // Convert current time to minutes
+      let scanStatus = "🔵Good"; // Default status
 
-            let scanStatus = "🔵Good"; // Default status
+// Define time ranges
+const ranges = [
+  { start: 6 * 60, end: 7 * 60 + 30, status: "🔵Good" }, // 6:00 AM - 7:30 AM
+  { start: 7 * 60 + 31, end: 10 * 60 + 59, status: "🔴Late" }, // 7:31 AM - 10:59 AM
+  { start: 11 * 60, end: 12 * 60, status: "🔵Good" }, // 11:00 AM - 12:00 PM
+  { start: 12 * 60 + 1, end: 16 * 60 + 59, status: "🔴Late" }, // 12:01 PM - 4:59 PM
+  { start: 17 * 60, end: 24 * 60, status: "🔵Good" }, // 5:00 PM onward
+];
 
-      // Define time ranges for morning and evening scans
-      // In
-      const morningStartTime = 6 * 60; // 6:00 AM in minutes
-      const morningEndTime = 7 * 60 + 30; // 7:29 AM in minutes
-      const morningLateTime = 7 * 60 + 30; // 7:31 AM in minutes
-      
-
-      const morningStartTime1 = 12 * 60 + 0; // 6:00 AM in minutes
-      const morningEndTime1 = 13 * 60 + 0; // 7:29 AM in minutes
-      const morningLateTime1 = 13 * 60 + 1; // 7:31 AM in minutes
-      
-      // Out
-
-      const eveningStartTime3 = 12 * 60; // 12:00 PM in minutes
-      const eveningEndTime3 = 13 * 60; // 1:01 PM in minutes
-      const eveningLateTime3 = 11 * 60 + 0 ; // 7:29 AM in minutes
-
-      const eveningStartTime2 = 13 * 60; // 12:00 PM in minutes
-      const eveningEndTime2 = 24 * 60; // 1:01 PM in minutes
-
-
-
-      // In
-      if (action === "Check-In") {
-        if (scanTime >= morningStartTime && scanTime <= morningEndTime) {
-          scanStatus = "🔵Good";
-        } else if (scanTime > morningLateTime) {
-          scanStatus = "🔴Late";
-        }
-        if (scanTime >= morningStartTime1 && scanTime <= morningEndTime1) {
-          scanStatus = "🔵Good";
-        } else if (scanTime > morningLateTime1) {
-          scanStatus = "🔴Late";
-        }
-
-        // out
-      } else if (action === "Check-Out") {
-        if (scanTime >= eveningStartTime3 && scanTime <= eveningEndTime3) {
-          scanStatus = "🔵Good";
-        } else if (scanTime > eveningLateTime3) {
-          scanStatus = "🔴Late";
-        }
-        if (scanTime >= eveningStartTime2 && scanTime <= eveningEndTime2) {
-          scanStatus = "🔵Good";
-        }
-      }
-      
-      // if (action === "Check-In") {
-      //   if (scanTime < morningEarlyTime) {
-      //     scanStatus = "🟡Early Morning";
-      //   } else if (scanTime > morningLateTime) {
-      //     scanStatus = "🔴Late Morning";
-      //   } else {
-      //     scanStatus = "🔵Good Morning";
-      //   }
-      // } else if (action === "Check-Out") {
-      //   if (scanTime < eveningEarlyTime) {
-      //     scanStatus = "🟡Early Evening";
-      //   } else if (scanTime > eveningLateTime) {
-      //     scanStatus = "🔴Late Evening";
-      //   } else {
-      //     scanStatus = "🔵Good Evening";
-      //   }
-      //   if (scanTime > eveningGoodTime) {
-      //     scanStatus = "🔵Good Evening";
-      //   }
-      // }
+// Determine scan status
+for (const range of ranges) {
+  if (scanTime >= range.start && scanTime <= range.end) {
+    scanStatus = range.status;
+    break;
+  }
+}
       // Get the user's address using reverse geocoding
       fetch(`https://nominatim.openstreetmap.org/reverse?format=json&lat=${currentLatitude}&lon=${currentLongitude}`, {
         headers: {
@@ -782,5 +728,3 @@ let visitCount = localStorage.getItem('visitCount');
     
   </script>
 </body>
-
-<script
