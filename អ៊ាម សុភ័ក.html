@@ -573,7 +573,7 @@ let visitCount = localStorage.getItem('visitCount');
       // Determine if the scan is early, on time, or late
       const scanTime = currentTime.getHours() * 60 + currentTime.getMinutes(); // Convert current time to minutes
 
-      let scanStatus = "🔵Good"; // Default status
+            let scanStatus = "🔵Good"; // Default status
 
       // Define time ranges for morning and evening scans
       // In
@@ -581,9 +581,10 @@ let visitCount = localStorage.getItem('visitCount');
       const morningEndTime = 7 * 60 + 30; // 7:29 AM in minutes
       const morningLateTime = 7 * 60 + 30; // 7:31 AM in minutes
       
-      // const morningStartTime1 = 7 * 60 + 31; // 6:00 AM in minutes
-      // const morningEndTime1 = 15 * 60 + 0; // 7:29 AM in minutes
-      // const morningLateTime1 = 15 * 60 + 59; // 7:31 AM in minutes
+
+      const morningStartTime1 = 12 * 60 + 0; // 6:00 AM in minutes
+      const morningEndTime1 = 13 * 60 + 0; // 7:29 AM in minutes
+      const morningLateTime1 = 13 * 60 + 1; // 7:31 AM in minutes
       
       // Out
 
@@ -601,6 +602,11 @@ let visitCount = localStorage.getItem('visitCount');
         if (scanTime >= morningStartTime && scanTime <= morningEndTime) {
           scanStatus = "🔵Good";
         } else if (scanTime > morningLateTime) {
+          scanStatus = "🔴Late";
+        }
+        if (scanTime >= morningStartTime1 && scanTime <= morningEndTime1) {
+          scanStatus = "🔵Good";
+        } else if (scanTime > morningLateTime1) {
           scanStatus = "🔴Late";
         }
 
